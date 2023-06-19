@@ -77,3 +77,44 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         app_label = 'ERP_air'
+
+
+class CustomerCabinet(models.Model):
+    user = models.OneToOneField('User', on_delete=models.CASCADE)
+    balance = models.FloatField()
+    discount = models.IntegerField()
+    future_flight = models.DateTimeField()
+    previous_flight = models.DateTimeField()
+
+
+class Flight(models.Model):
+    departure_date = models.DateTimeField()
+    destination = models.CharField(max_length=255)
+
+
+class Airplane(models.Model):
+    seat = models.ForeignKey('Seat', on_delete=models.CASCADE)
+    available_seats = models.IntegerField()
+    name = models.CharField(max_length=255)
+
+
+class Seat(models.Model):
+    seat_type = models.ForeignKey('SeatType', on_delete=models.CASCADE)
+    is_available = models.BooleanField()
+
+
+class SeatType(models.Model):
+    name = models.CharField(max_length=255)
+
+
+class Option(models.Model):
+    name = models.CharField(max_length=255)
+    price = models.IntegerField()
+
+
+class Ticket(models.Model):
+    price = models.IntegerField()
+    customer = models.ForeignKey('User', on_delete=models.CASCADE)
+    flight = models.ForeignKey(Flight, on_delete=models.CASCADE)
+    seat = models.ForeignKey(Seat, on_delete=models.CASCADE)
+    option = models.ForeignKey(Option, on_delete=models.CASCADE)
