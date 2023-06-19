@@ -2,5 +2,6 @@
 *__pycache__
 ../.env
 venv
-/.env
+/DjangoAir_ERP_system/.env
 db.sqlite3
+/.env
