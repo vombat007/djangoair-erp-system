@@ -23,7 +23,6 @@ class MyUserManager(BaseUserManager):
         user.set_password(password)
         try:
             user.save(using=self._db)
-
         except IntegrityError:
             raise ValueError('This email has already been registered.')
 
@@ -41,6 +40,18 @@ class MyUserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     objects = MyUserManager()
 
+    CUSTOMER = 'customer'
+    GATE_MANAGER = 'gate_manager'
+    CHECKIN_MANAGER = 'checkin_manager'
+    SUPERVISOR = 'supervisor'
+
+    ROLE_CHOICES = (
+        (CUSTOMER, 'Customer'),
+        (GATE_MANAGER, 'Gate Manager'),
+        (CHECKIN_MANAGER, 'Check-in Manager'),
+        (SUPERVISOR, 'Supervisor'),
+    )
+
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -53,7 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     created_at = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    role = models.CharField(max_length=255)
+    role = models.CharField(max_length=255, choices=ROLE_CHOICES, default=CUSTOMER)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
