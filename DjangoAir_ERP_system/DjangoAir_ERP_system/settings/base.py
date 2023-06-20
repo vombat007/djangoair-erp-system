@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ERP_air.apps.ErpAirConfig',
+    'rest_framework',
+    'frontend',
 ]
 
 MIDDLEWARE = [
