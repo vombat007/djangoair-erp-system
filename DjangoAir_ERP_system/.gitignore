@@ -5,3 +5,7 @@ venv
 /DjangoAir_ERP_system/.env
 db.sqlite3
 /.env
+notes
+bundles
+webpack-stats.json
+node_modules
