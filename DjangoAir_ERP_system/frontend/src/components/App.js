@@ -1,52 +1,60 @@
 import React, { Component } from 'react';
-import { render } from "react-dom";
+import { render } from 'react-dom';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [],
-      loaded: false,
-      placeholder: "Loading"
+      email: '',
+      password: '',
     };
   }
 
-  componentDidMount() {
-    fetch("api/user")
-      .then(response => {
-        if (response.status > 400) {
-          return this.setState(() => {
-            return { placeholder: "Something went wrong!" };
-          });
-        }
-        return response.json();
+  handleChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    // Send a POST request to the registration API endpoint with the form data
+    // Replace `YOUR_API_URL` with the actual URL of your backend API
+    fetch('api/register/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state)
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        // Handle the response from the server as needed
       })
-      .then(data => {
-        this.setState(() => {
-          return {
-            data,
-            loaded: true
-          };
-        });
+      .catch((error) => {
+        console.error('Error:', error);
+        // Handle any errors that occur during the request
       });
-  }
+  };
 
   render() {
     return (
-      <ul>
-        {this.state.data.map(contact => {
-          return (
-            <li key={contact.id}>
-              {contact.name} - {contact.email}
-            </li>
-          );
-        })}
-      </ul>
+      <div>
+        <h1>User Registration</h1>
+        <form onSubmit={this.handleSubmit}>
+          <label htmlFor="email">Email:</label>
+          <input type="email" id="email" name="email"
+          value={this.state.email} onChange={this.handleChange} required />
+          <br />
+          <label htmlFor="password">Password:</label>
+          <input type="password" id="password" name="password"
+          value={this.state.password} onChange={this.handleChange} required />
+          <br />
+          <button type="submit">Register</button>
+        </form>
+      </div>
     );
   }
 }
 
-export default App;
-
-const container = document.getElementById("app");
+const container = document.getElementById('app');
 render(<App />, container);
