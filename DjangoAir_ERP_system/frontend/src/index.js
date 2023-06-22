@@ -1,2 +1,3 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import App from "./App";
+import Registrate from "./components/Registrate";
+import Login from "./components/Login";

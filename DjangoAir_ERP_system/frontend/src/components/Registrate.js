@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {createRoot} from 'react-dom/client';
 import Form from './Form';
 
 const Registrate = () => {
@@ -50,7 +51,6 @@ const Registrate = () => {
 
     return (
         <div>
-            <h1>Sign Up / Sign In</h1>
             {showForm ? (
                 <Form
                     email={email}
@@ -67,4 +67,6 @@ const Registrate = () => {
     );
 };
 
-export default Registrate;
+const container = document.getElementById('registrate');
+const root = createRoot(container);
+root.render(<Registrate/>);
