@@ -61,7 +61,7 @@ const Registrate = () => {
                     handleSubmit={handleSubmit}
                 />
             ) : (
-                <button onClick={handleShowForm}>Sign Up</button>
+                <button type="button" className="btn btn-primary" onClick={handleShowForm}>Sign Up</button>
             )}
         </div>
     );
