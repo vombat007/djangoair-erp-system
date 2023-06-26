@@ -81,10 +81,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class CustomerCabinet(models.Model):
     user = models.OneToOneField('User', on_delete=models.CASCADE)
-    balance = models.FloatField()
-    discount = models.IntegerField()
-    future_flight = models.DateTimeField()
-    previous_flight = models.DateTimeField()
+    balance = models.FloatField(null=True, blank=True)
+    discount = models.IntegerField(null=True, blank=True)
+    future_flight = models.DateTimeField(null=True, blank=True)
+    previous_flight = models.DateTimeField(null=True, blank=True)
 
 
 class Flight(models.Model):

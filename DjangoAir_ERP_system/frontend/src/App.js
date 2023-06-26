@@ -24,6 +24,9 @@ const Navbar = () => {
                     <li className="nav-item">
                         <Login/>
                     </li>
+                    <li className="nav-item">
+                        Cabinet
+                    </li>
                 </ul>
             </div>
         </nav>

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User
+from .models import *
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -19,3 +19,9 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.save()
         return user
+
+
+class CustomerCabinetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerCabinet
+        fields = ('balance', 'discount', 'future_flight', 'previous_flight')
