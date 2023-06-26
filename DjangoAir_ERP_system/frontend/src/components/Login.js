@@ -1,6 +1,5 @@
-import React, {useState, useEffect} from 'react';
-import {createRoot} from 'react-dom/client';
-
+import React, { useState, useEffect } from 'react';
+import { createRoot } from 'react-dom/client';
 
 function getCookie(name) {
   const value = `; ${document.cookie}`;
@@ -10,6 +9,7 @@ function getCookie(name) {
 
 function Login() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [showLoginForm, setShowLoginForm] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [csrfToken, setCsrfToken] = useState('');
@@ -26,6 +26,10 @@ function Login() {
     }
   }, []);
 
+  const handleLoginClick = () => {
+    setShowLoginForm(true);
+  };
+
   const handleLogin = () => {
     fetch('/api/login/', {
       method: 'POST',
@@ -35,7 +39,7 @@ function Login() {
       },
       body: JSON.stringify({ username, password }),
     })
-      .then(response => {
+      .then((response) => {
         if (response.status === 202) {
           setLoggedIn(true);
           localStorage.setItem('loggedIn', 'true');
@@ -44,7 +48,7 @@ function Login() {
           // Handle invalid username or password
         }
       })
-      .catch(error => {
+      .catch((error) => {
         // Handle network or server errors
       });
   };
@@ -56,7 +60,7 @@ function Login() {
         'X-CSRFToken': csrfToken,
       },
     })
-      .then(response => {
+      .then((response) => {
         if (response.status === 200) {
           setLoggedIn(false);
           localStorage.removeItem('loggedIn');
@@ -65,7 +69,7 @@ function Login() {
           // Handle logout failure
         }
       })
-      .catch(error => {
+      .catch((error) => {
         // Handle network or server errors
       });
   };
@@ -75,30 +79,40 @@ function Login() {
       {loggedIn ? (
         <div>
           <h1>Welcome, {username}!</h1>
-          <button type="submit" className="btn btn-secondary" onClick={handleLogout}>Logout</button>
+          <button type="submit" className="btn btn-secondary" onClick={handleLogout}>
+            Logout
+          </button>
         </div>
       ) : (
         <div>
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={e => setUsername(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-          />
-          <button type="submit" className="btn btn-primary" onClick={handleLogin}>Login</button>
+          {!showLoginForm && (
+            <button type="submit" className="btn btn-primary" onClick={handleLoginClick}>
+              Login
+            </button>
+          )}
+          {showLoginForm && (
+            <div>
+              <input
+                type="text"
+                placeholder="Email"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button type="submit" className="btn btn-primary" onClick={handleLogin}>
+                Login
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
   );
 }
 
-
-const container = document.getElementById('login');
-const root = createRoot(container);
-root.render(<Login/>);
+export default Login;

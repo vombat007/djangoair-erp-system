@@ -98,24 +98,22 @@ const Registrate = () => {
         setShowForm(true);
     };
 
-    return (
-        <div>
-            {showForm ? (
-                <Form
-                    email={email}
-                    password1={password1}
-                    password2={password2}
-                    errors={errors}
-                    handleChange={handleChange}
-                    handleSubmit={handleSubmit}
-                />
-            ) : (
-                <button type="button" className="btn btn-primary" onClick={handleShowForm}>Sign Up</button>
-            )}
-        </div>
-    );
+  return (
+    <div>
+      {showForm ? (
+        <Form
+          email={email}
+          password1={password1}
+          password2={password2}
+          errors={errors}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+        />
+      ) : (
+        <button type="button" className="btn btn-primary" onClick={handleShowForm}>Sign Up</button>
+      )}
+    </div>
+  );
 };
 
-const container = document.getElementById('registrate');
-const root = createRoot(container);
-root.render(<Registrate/>);
+export default Registrate;
