@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { createRoot } from 'react-dom/client';
 
 function getCookie(name) {
   const value = `; ${document.cookie}`;
@@ -78,9 +77,8 @@ function Login() {
     <div>
       {loggedIn ? (
         <div>
-          <h1>Welcome, {username}!</h1>
           <button type="submit" className="btn btn-secondary" onClick={handleLogout}>
-            Logout
+            {username} Logout
           </button>
         </div>
       ) : (
