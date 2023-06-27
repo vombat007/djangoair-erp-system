@@ -49,7 +49,7 @@ class CustomerLogoutAPIView(APIView):
         return Response({'message': 'Logout successful'}, status=status.HTTP_200_OK)
 
 
-class CustomerCabinetView(APIView):
+class CustomerCabinetViewAPIView(APIView):
     def get(self, request):
         user = request.user
         customer_cabinet = CustomerCabinet.objects.get(user=user)
@@ -59,8 +59,15 @@ class CustomerCabinetView(APIView):
     def post(self, request):
         user = request.user
         customer_cabinet = CustomerCabinet.objects.get(user=user)
-        serializer = CustomerCabinetSerializer(customer_cabinet, data=request.data)
+        serializer = CustomerCabinetSerializer(customer_cabinet, data=request.data, partial=True)
         if serializer.is_valid():
+            # Update the user's first_name and last_name fields if provided
+            if 'first_name' in request.data:
+                user.first_name = request.data['first_name']
+            if 'last_name' in request.data:
+                user.last_name = request.data['last_name']
+            user.save()
+
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=400)

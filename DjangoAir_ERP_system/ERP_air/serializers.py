@@ -22,6 +22,26 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CustomerCabinetSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(source='user.first_name', required=False)
+    last_name = serializers.CharField(source='user.last_name', required=False)
+
     class Meta:
         model = CustomerCabinet
-        fields = ('discount', 'future_flight', 'previous_flight')
+        fields = ['user', 'discount', 'future_flight', 'previous_flight', 'first_name', 'last_name']
+
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop('user', {})
+        first_name = user_data.get('first_name')
+        last_name = user_data.get('last_name')
+
+        instance = super().update(instance, validated_data)
+
+        user = instance.user
+        if first_name:
+            user.first_name = first_name
+        if last_name:
+            user.last_name = last_name
+        user.save()
+
+        return instance
+
