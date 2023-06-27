@@ -24,4 +24,4 @@ class UserSerializer(serializers.ModelSerializer):
 class CustomerCabinetSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerCabinet
-        fields = ('balance', 'discount', 'future_flight', 'previous_flight')
+        fields = ('discount', 'future_flight', 'previous_flight')

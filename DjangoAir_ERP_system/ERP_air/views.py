@@ -16,7 +16,6 @@ class CustomerRegistrationAPIView(APIView):
             # Create a customer cabinet for the user
             customer_cabinet = CustomerCabinet.objects.create(
                 user=user,
-                balance=0,
                 discount=0,
                 future_flight=None,
                 previous_flight=None
