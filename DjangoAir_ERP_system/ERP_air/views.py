@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .forms import CustomerCreationForm, CustomerLoginForm
@@ -50,6 +50,8 @@ class CustomerLogoutAPIView(APIView):
 
 
 class CustomerCabinetViewAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]  # Add permission class
+
     def get(self, request):
         user = request.user
         customer_cabinet = CustomerCabinet.objects.get(user=user)
@@ -60,6 +62,7 @@ class CustomerCabinetViewAPIView(APIView):
         user = request.user
         customer_cabinet = CustomerCabinet.objects.get(user=user)
         serializer = CustomerCabinetSerializer(customer_cabinet, data=request.data, partial=True)
+
         if serializer.is_valid():
             # Update the user's first_name and last_name fields if provided
             if 'first_name' in request.data:
@@ -70,4 +73,5 @@ class CustomerCabinetViewAPIView(APIView):
 
             serializer.save()
             return Response(serializer.data)
+
         return Response(serializer.errors, status=400)
