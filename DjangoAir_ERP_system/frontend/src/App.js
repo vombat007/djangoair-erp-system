@@ -2,6 +2,7 @@ import React from 'react';
 import {createRoot} from 'react-dom/client';
 import Registrate from './components/Registrate';
 import Login from './components/Login';
+import CustomerCabinetView from "./components/Customer_cabinet";
 
 const Navbar = () => {
     return (
@@ -24,9 +25,9 @@ const Navbar = () => {
                     <li className="nav-item">
                         <Login/>
                     </li>
-                    <li className="nav-item">
-                        Cabinet
-                    </li>
+                  {/*<li className="nav-item">*/}
+                  {/*      <CustomerCabinetView />*/}
+                  {/*  </li>*/}
                 </ul>
             </div>
         </nav>

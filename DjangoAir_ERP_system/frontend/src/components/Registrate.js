@@ -44,8 +44,8 @@ const Form = ({email, password1, password2, errors, handleChange, handleSubmit})
                 />
                 {errors.password2 && <div className="invalid-feedback">{errors.password2}</div>}
             </div>
-
-            <button type="submit" className="btn btn-primary">Register</button>
+            <br></br>
+            <button type="submit" className="btn btn-primary">Registrate</button>
         </form>
     );
 };
@@ -97,22 +97,46 @@ const Registrate = () => {
         setShowForm(true);
     };
 
-  return (
-    <div>
-      {showForm ? (
-        <Form
-          email={email}
-          password1={password1}
-          password2={password2}
-          errors={errors}
-          handleChange={handleChange}
-          handleSubmit={handleSubmit}
-        />
-      ) : (
-        <button type="button" className="btn btn-primary" onClick={handleShowForm}>Sign Up</button>
-      )}
-    </div>
-  );
+    return (
+        <div>
+            {showForm ? (
+                <Form
+                    email={email}
+                    password1={password1}
+                    password2={password2}
+                    errors={errors}
+                    handleChange={handleChange}
+                    handleSubmit={handleSubmit}
+                />
+            ) : (
+                <div className="dropdown">
+                    <button
+                        type="button"
+                        className="btn btn-primary dropdown-toggle"
+                        id="signupDropdown"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        Sign Up
+                    </button>
+                    <ul className="dropdown-menu" aria-labelledby="signupDropdown">
+                        <li>
+                            <div className="px-10 py-3">
+                                <Form
+                                    email={email}
+                                    password1={password1}
+                                    password2={password2}
+                                    errors={errors}
+                                    handleChange={handleChange}
+                                    handleSubmit={handleSubmit}
+                                />
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            )}
+        </div>
+    );
 };
 
 export default Registrate;
