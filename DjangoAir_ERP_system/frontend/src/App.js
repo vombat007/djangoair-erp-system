@@ -20,14 +20,14 @@ const Navbar = () => {
                     </li>
 
                     <li className="nav-item">
-                        <Registrate/>
+                        <Registrate />
                     </li>
                     <li className="nav-item">
-                        <Login/>
+                        <Login />
                     </li>
-                  {/*<li className="nav-item">*/}
-                  {/*      <CustomerCabinetView />*/}
-                  {/*  </li>*/}
+                  <li className="nav-item">
+                        <CustomerCabinetView />
+                    </li>
                 </ul>
             </div>
         </nav>
