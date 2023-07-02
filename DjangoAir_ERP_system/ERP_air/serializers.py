@@ -45,3 +45,9 @@ class CustomerCabinetSerializer(serializers.ModelSerializer):
 
         return instance
 
+
+class FlightSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Flight
+        fields = ['departure_date', 'destination']
+

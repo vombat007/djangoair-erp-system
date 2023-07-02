@@ -4,7 +4,7 @@ from django.db import models, IntegrityError
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, password=None, username=None, is_staff=False, is_superuser=False):
+    def create_user(self, email, password=None, is_staff=False, is_superuser=False):
         """
         Creates and saves a User with the given email and password.
         """
@@ -81,7 +81,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class CustomerCabinet(models.Model):
     user = models.OneToOneField('User', on_delete=models.CASCADE)
-    discount = models.IntegerField(null=True, blank=True)
+    discount = models.IntegerField(default=0)
     future_flight = models.DateTimeField(null=True, blank=True)
     previous_flight = models.DateTimeField(null=True, blank=True)
 
@@ -98,6 +98,7 @@ class Airplane(models.Model):
 
 
 class Seat(models.Model):
+    seat_count = models.IntegerField(default=10)
     seat_type = models.ForeignKey('SeatType', on_delete=models.CASCADE)
     is_available = models.BooleanField()
 

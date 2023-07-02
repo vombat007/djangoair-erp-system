@@ -3,8 +3,8 @@ from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .forms import CustomerCreationForm, CustomerLoginForm
-from .models import CustomerCabinet
-from .serializers import CustomerCabinetSerializer
+from .models import *
+from .serializers import CustomerCabinetSerializer, FlightSerializer
 
 
 class CustomerRegistrationAPIView(APIView):
@@ -75,3 +75,20 @@ class CustomerCabinetViewAPIView(APIView):
             return Response(serializer.data)
 
         return Response(serializer.errors, status=400)
+
+
+class FlightsViewAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        flights = Flight.objects.all()
+        serializer = FlightSerializer(flights, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = FlightSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
