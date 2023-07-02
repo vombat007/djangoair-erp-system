@@ -2,13 +2,13 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 
 function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
 const getCSRFToken = () => {
-  return getCookie('csrftoken');
+    return getCookie('csrftoken');
 };
 
 const CustomerCabinetView = () => {
@@ -16,11 +16,9 @@ const CustomerCabinetView = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
 
-
     useEffect(() => {
         fetchCustomerData();
     }, []);
-
 
     const fetchCustomerData = async () => {
         try {
@@ -41,19 +39,22 @@ const CustomerCabinetView = () => {
         setLastName(event.target.value);
     };
 
-
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
-            const response = await axios.post('/api/customer_cabinet/', {
-                first_name: firstName,
-                last_name: lastName,
-            }, {
-                headers: {
-                    'X-CSRFToken': getCSRFToken(),
+            const response = await axios.post(
+                '/api/customer_cabinet/',
+                {
+                    first_name: firstName,
+                    last_name: lastName,
                 },
-            });
+                {
+                    headers: {
+                        'X-CSRFToken': getCSRFToken(),
+                    },
+                }
+            );
 
             setCustomerData(response.data);
             alert('Data updated successfully!');
@@ -64,35 +65,57 @@ const CustomerCabinetView = () => {
 
     return (
         <div>
-            <h1>{customerData.first_name} Cabinet</h1>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="firstName">First Name:</label>
-                    <input
-                        type="text"
-                        id="firstName"
-                        className="form-control"
-                        value={firstName}
-                        onChange={handleFirstNameChange}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="lastName">Last Name:</label>
-                    <input
-                        type="text"
-                        id="lastName"
-                        className="form-control"
-                        value={lastName}
-                        onChange={handleLastNameChange}
-                    />
-                </div>
-                <button type="submit" className="btn btn-primary">Update</button>
-            </form>
-            <div>
-                <h2>Discount: {customerData.discount} %</h2>
-                <h2>Future Flight: {customerData.future_flight}</h2>
-                <h2>Previous Flight: {customerData.previous_flight}</h2>
+            <div className="dropdown">
+                <button
+                    type="button"
+                    className="btn btn-primary dropdown-toggle"
+                    id="cabinetDropdown"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    Cabinet
+                </button>
+                <ul className="dropdown-menu" aria-labelledby="cabinetDropdown">
+                    <h1>{customerData.first_name} Cabinet</h1>
+                    <div>
+                        <h2>Discount: {customerData.discount} %</h2>
+                        <h2>Future Flight: {customerData.future_flight}</h2>
+                        <h2>Previous Flight: {customerData.previous_flight}</h2>
+                    </div>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label htmlFor="firstName">First Name:</label>
+                            <input
+                                type="text"
+                                id="firstName"
+                                className="form-control"
+                                value={firstName}
+                                onChange={handleFirstNameChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="lastName">Last Name:</label>
+                            <input
+                                type="text"
+                                id="lastName"
+                                className="form-control"
+                                value={lastName}
+                                onChange={handleLastNameChange}
+                            />
+                        </div>
+                        <button type="submit" className="btn btn-primary">
+                            Update
+                        </button>
+                    </form>
+                </ul>
             </div>
+            <style>
+                {`
+        .form-control {
+          width: 600px; /* Set the desired width for the input fields */
+        }
+        `}
+            </style>
         </div>
     );
 };
