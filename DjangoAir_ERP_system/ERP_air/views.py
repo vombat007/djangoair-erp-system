@@ -117,8 +117,7 @@ class FlightSearchAPIView(APIView):
         serializer = FlightSerializer(flights, many=True, context={'request': request})
         data = [{
             'departure_date':
-                f"{flight['departure_date']} "
-                f"{datetime.strptime(flight['departure_date'], '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%H:%M')}",
+                f"{datetime.strptime(flight['departure_date'], '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%Y-%m-%d %H:%M')}",
             'destination':
                 flight['destination']} for flight in serializer.data]
 
