@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from .forms import CustomerCreationForm, CustomerLoginForm
 from .models import *
 from .serializers import CustomerCabinetSerializer, FlightSerializer
+from datetime import datetime
 
 
 class CustomerRegistrationAPIView(APIView):
@@ -77,7 +78,7 @@ class CustomerCabinetViewAPIView(APIView):
         return Response(serializer.errors, status=400)
 
 
-class FlightsViewAPIView(APIView):
+class FlightsListAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
@@ -92,3 +93,33 @@ class FlightsViewAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class FlightSearchAPIView(APIView):
+    def get(self, request):
+        destination = request.query_params.get('destination')
+        departure_date = request.query_params.get('departure_date')
+
+        # Convert departure_date from YY/MM/DD to datetime object
+        try:
+            departure_date = datetime.strptime(departure_date, '%Y/%m/%d')
+        except ValueError:
+            return Response({"error": "Invalid date format. Please use YY/MM/DD format."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        if destination == "":
+            return Response({"error": "Destination must be Not Blank"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        # Query flights based on the destination and departure date
+        flights = Flight.objects.filter(destination__iexact=destination, departure_date__date=departure_date)
+
+        # Serialize the query result and format the departure_date
+        serializer = FlightSerializer(flights, many=True, context={'request': request})
+        data = [{
+            'departure_date':
+                f"{flight['departure_date']} "
+                f"{datetime.strptime(flight['departure_date'], '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%H:%M')}",
+            'destination':
+                flight['destination']} for flight in serializer.data]
+
+        return Response(data)
