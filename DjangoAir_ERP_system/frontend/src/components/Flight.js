@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import {createRoot} from "react-dom/client";
+import DatePicker from 'react-datepicker';
+import { createRoot } from 'react-dom/client';
 
 const FlightsList = () => {
   const [destination, setDestination] = useState('');
-  const [departureDate, setDepartureDate] = useState('');
+  const [departureDate, setDepartureDate] = useState(new Date());
   const [flights, setFlights] = useState([]);
 
   const handleSearch = () => {
@@ -12,7 +13,7 @@ const FlightsList = () => {
       .get('/api/flight/search/', {
         params: {
           destination: destination,
-          departure_date: departureDate,
+          departure_date: departureDate.toISOString().split('T')[0], // Format date to 'YYYY-MM-DD'
         },
       })
       .then((response) => {
@@ -32,11 +33,12 @@ const FlightsList = () => {
         value={destination}
         onChange={(e) => setDestination(e.target.value)}
       />
-      <input
-        type="text"
-        placeholder="Departure Date (YY/MM/DD)"
-        value={departureDate}
-        onChange={(e) => setDepartureDate(e.target.value)}
+      <DatePicker
+        selected={departureDate}
+        onChange={(date) => setDepartureDate(date)}
+        dateFormat="yyyy-MM-dd"
+        className="form-control"
+        placeholderText="Departure Date (YY-MM-DD)"
       />
       <button onClick={handleSearch}>Search</button>
       <div>
@@ -51,8 +53,6 @@ const FlightsList = () => {
   );
 };
 
-
-
 const container = document.getElementById('app');
 const root = createRoot(container);
-root.render(<FlightsList/>);
+root.render(<FlightsList />);

@@ -101,7 +101,7 @@ class FlightSearchAPIView(APIView):
 
         # Convert departure_date from YY/MM/DD to datetime object
         try:
-            departure_date = datetime.strptime(departure_date, '%Y/%m/%d')
+            departure_date = datetime.strptime(departure_date, '%Y-%m-%d')
         except ValueError:
             return Response({"error": "Invalid date format. Please use YY/MM/DD format."},
                             status=status.HTTP_400_BAD_REQUEST)
