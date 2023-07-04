@@ -30,6 +30,7 @@ const FlightsList = () => {
       <input
         type="text"
         placeholder="Destination"
+        className="form-control"
         value={destination}
         onChange={(e) => setDestination(e.target.value)}
       />
@@ -40,7 +41,9 @@ const FlightsList = () => {
         className="form-control"
         placeholderText="Departure Date (YY-MM-DD)"
       />
-      <button onClick={handleSearch}>Search</button>
+        <div>
+            <button type="submit" className="btn btn-primary" onClick={handleSearch}>Search</button>
+        </div>
       <div>
         {flights.map((flight) => (
           <div key={flight.id}>

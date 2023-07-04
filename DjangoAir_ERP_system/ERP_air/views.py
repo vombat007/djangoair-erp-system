@@ -125,6 +125,6 @@ class FlightSearchAPIView(APIView):
             return Response([{
                 'destination': 'Today the flight is not in this direction.',
                 'departure_date': 'And for this date'
-            }])
+            }], status=status.HTTP_204_NO_CONTENT)
         else:
             return Response(data)
