@@ -95,6 +95,8 @@ class FlightsListAPIView(APIView):
 
 
 class FlightSearchAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request):
         destination = request.query_params.get('destination')
         departure_date = request.query_params.get('departure_date')
@@ -125,6 +127,6 @@ class FlightSearchAPIView(APIView):
             return Response([{
                 'destination': 'Today the flight is not in this direction.',
                 'departure_date': 'And for this date'
-            }], status=status.HTTP_204_NO_CONTENT)
+            }])
         else:
             return Response(data)
