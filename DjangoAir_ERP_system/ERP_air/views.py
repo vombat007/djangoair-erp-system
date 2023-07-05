@@ -100,6 +100,7 @@ class FlightSearchAPIView(APIView):
     def get(self, request):
         destination = request.query_params.get('destination')
         departure_date = request.query_params.get('departure_date')
+        seats_count = request.query_params.get('seats_count')  # New parameter
 
         # Convert departure_date from YY/MM/DD to datetime object
         try:
@@ -109,11 +110,21 @@ class FlightSearchAPIView(APIView):
                             status=status.HTTP_400_BAD_REQUEST)
 
         if destination == "":
-            return Response({"error": "Destination must be Not Blank"},
+            return Response({"error": "Destination must not be blank."},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        # Query flights based on the destination and departure date
-        flights = Flight.objects.filter(destination__iexact=destination, departure_date__date=departure_date)
+        if seats_count is None or not seats_count.isdigit():
+            return Response({"error": "Invalid seats count. Please provide a valid number."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        seats_count = int(seats_count)
+
+        # Query flights based on the destination, departure date, and available seats count
+        flights = Flight.objects.filter(
+            destination__iexact=destination,
+            departure_date__date=departure_date,
+            available_seats__gte=seats_count
+        )
 
         # Serialize the query result and format the departure_date
         serializer = FlightSerializer(flights, many=True, context={'request': request})
@@ -125,8 +136,8 @@ class FlightSearchAPIView(APIView):
 
         if not data:
             return Response([{
-                'destination': 'Today the flight is not in this direction.',
-                'departure_date': 'And for this date'
+                'destination': 'No flights available for the given criteria.',
+                'departure_date': 'Please choose a different date or destination.'
             }])
         else:
             return Response(data)

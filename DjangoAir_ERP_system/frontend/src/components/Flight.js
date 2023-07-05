@@ -1,61 +1,75 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
-import { createRoot } from 'react-dom/client';
+import {createRoot} from 'react-dom/client';
 
 const FlightsList = () => {
-  const [destination, setDestination] = useState('');
-  const [departureDate, setDepartureDate] = useState(new Date());
-  const [flights, setFlights] = useState([]);
+    const [destination, setDestination] = useState('');
+    const [departureDate, setDepartureDate] = useState(new Date());
+    const [seatCount, setSeatCount] = useState('');
+    const [flights, setFlights] = useState([]);
 
-  const handleSearch = () => {
-    axios
-      .get('/api/flight/search/', {
-        params: {
-          destination: destination,
-          departure_date: departureDate.toISOString().split('T')[0], // Format date to 'YYYY-MM-DD'
-        },
-      })
-      .then((response) => {
-        setFlights(response.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+    const handleSearch = () => {
+        if (!seatCount || isNaN(Number(seatCount)) || Number(seatCount) < 0) {
+            alert('Please enter a valid seat count.');
+            return;
+        }
 
-  return (
-    <div>
-      <h1>Flight Search</h1>
-      <input
-        type="text"
-        placeholder="Destination"
-        className="form-control"
-        value={destination}
-        onChange={(e) => setDestination(e.target.value)}
-      />
-      <DatePicker
-        selected={departureDate}
-        onChange={(date) => setDepartureDate(date)}
-        dateFormat="yyyy-MM-dd"
-        className="form-control"
-        placeholderText="Departure Date (YY-MM-DD)"
-      />
+        axios
+            .get('/api/flight/search/', {
+                params: {
+                    destination: destination,
+                    departure_date: departureDate.toISOString().split('T')[0], // Format date to 'YYYY-MM-DD'
+                    seats_count: seatCount,
+                },
+            })
+            .then((response) => {
+                setFlights(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
+    return (
         <div>
-            <button type="submit" className="btn btn-primary" onClick={handleSearch}>Search</button>
+            <h1>Flight Search</h1>
+            <input
+                type="text"
+                placeholder="Destination"
+                className="form-control"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+            />
+            <input
+                type="text"
+                placeholder="Seat Count"
+                className="form-control"
+                value={seatCount}
+                onChange={(e) => setSeatCount(e.target.value)}
+            />
+            <DatePicker
+                selected={departureDate}
+                onChange={(date) => setDepartureDate(date)}
+                dateFormat="yyyy-MM-dd"
+                className="form-control"
+                placeholderText="Departure Date (YY-MM-DD)"
+            />
+            <div>
+                <button type="submit" className="btn btn-primary" onClick={handleSearch}>Search</button>
+            </div>
+            <div>
+                {flights.map((flight) => (
+                    <div key={flight.id}>
+                        <p>Destination: {flight.destination}</p>
+                        <p>Departure Date: {flight.departure_date}</p>
+                    </div>
+                ))}
+            </div>
         </div>
-      <div>
-        {flights.map((flight) => (
-          <div key={flight.id}>
-            <p>Destination: {flight.destination}</p>
-            <p>Departure Date: {flight.departure_date}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+    );
 };
 
 const container = document.getElementById('app');
 const root = createRoot(container);
-root.render(<FlightsList />);
+root.render(<FlightsList/>);

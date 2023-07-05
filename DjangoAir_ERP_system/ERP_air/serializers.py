@@ -49,5 +49,5 @@ class CustomerCabinetSerializer(serializers.ModelSerializer):
 class FlightSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flight
-        fields = ['departure_date', 'destination']
+        fields = '__all__'
 

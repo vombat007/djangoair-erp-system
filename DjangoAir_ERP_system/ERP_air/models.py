@@ -87,24 +87,35 @@ class CustomerCabinet(models.Model):
 
 
 class Flight(models.Model):
+    airplane = models.OneToOneField('Airplane', on_delete=models.CASCADE)
     departure_date = models.DateTimeField()
     destination = models.CharField(max_length=255)
+    available_seats = models.IntegerField(default=20)
+
+    def update_available_seats(self):
+        booked_seats = Ticket.objects.filter(flight=self).count()
+        self.available_seats = self.airplane.seats.filter(is_available=True).count() - booked_seats
+        self.save()
 
 
 class Airplane(models.Model):
-    seat = models.ForeignKey('Seat', on_delete=models.CASCADE)
-    available_seats = models.IntegerField()
     name = models.CharField(max_length=255)
 
 
 class Seat(models.Model):
-    seat_count = models.IntegerField(default=10)
-    seat_type = models.ForeignKey('SeatType', on_delete=models.CASCADE)
-    is_available = models.BooleanField()
+    FIRST_CLASS = 'first_class'
+    BUSINESS_CLASS = 'business_class'
+    ECONOMY_CLASS = 'economy_class'
 
+    SEAT_TYPE = (
+        (FIRST_CLASS, 'First_class'),
+        (BUSINESS_CLASS, 'Business_class'),
+        (ECONOMY_CLASS, 'Economy_class'),
+    )
 
-class SeatType(models.Model):
-    name = models.CharField(max_length=255)
+    airplane = models.ForeignKey(Airplane, on_delete=models.CASCADE)
+    seat_type = models.CharField(max_length=255, choices=SEAT_TYPE, default=ECONOMY_CLASS)
+    is_available = models.BooleanField(default=True)
 
 
 class Option(models.Model):
@@ -116,5 +127,5 @@ class Ticket(models.Model):
     price = models.IntegerField(null=True, blank=True)
     customer = models.ForeignKey('User', on_delete=models.CASCADE)
     flight = models.ForeignKey(Flight, on_delete=models.CASCADE)
-    seat = models.ForeignKey(Seat, on_delete=models.CASCADE)
+    seat = models.OneToOneField(Seat, on_delete=models.CASCADE)
     option = models.ForeignKey(Option, on_delete=models.CASCADE)
