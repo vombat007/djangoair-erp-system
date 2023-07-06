@@ -134,10 +134,4 @@ class FlightSearchAPIView(APIView):
             'destination':
                 flight['destination']} for flight in serializer.data]
 
-        if not data:
-            return Response([{
-                'destination': 'No flights available for the given criteria.',
-                'departure_date': 'Please choose a different date or destination.'
-            }])
-        else:
-            return Response(data)
+        return Response(data)

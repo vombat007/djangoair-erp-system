@@ -4,11 +4,12 @@ import DatePicker from 'react-datepicker';
 import {createRoot} from 'react-dom/client';
 import {Form, Button} from 'react-bootstrap';
 
-const FlightsList = () => {
+const FlightsSearch = () => {
     const [destination, setDestination] = useState('');
     const [departureDate, setDepartureDate] = useState(new Date());
     const [seatCount, setSeatCount] = useState('');
     const [flights, setFlights] = useState([]);
+    const [showNoFlightsMessage, setShowNoFlightsMessage] = useState(false);
 
     const handleSearch = () => {
         if (!destination || Number(destination)) {
@@ -31,10 +32,16 @@ const FlightsList = () => {
             })
             .then((response) => {
                 setFlights(response.data);
+                setShowNoFlightsMessage(response.data.length === 0); // Set the flag based on the response
             })
             .catch((error) => {
                 console.error(error);
             });
+    };
+
+    const handleNextStep = (flightId) => {
+        // Logic to handle the next step for the selected flight
+        console.log('Next step for flight with ID:', flightId);
     };
 
     return (
@@ -71,18 +78,25 @@ const FlightsList = () => {
             <Button variant="primary" onClick={handleSearch}>
                 Search
             </Button>
-            <div>
-                {flights.map((flight) => (
-                    <div key={flight.id}>
-                        <p>Destination: {flight.destination}</p>
-                        <p>Departure Date: {flight.departure_date}</p>
-                    </div>
-                ))}
-            </div>
+            {showNoFlightsMessage ? (
+                <p>No flights available for the given criteria. Please choose a different date or destination.</p>
+            ) : (
+                <div>
+                    {flights.map((flight) => (
+                        <div key={flight.id}>
+                            <p>Destination: {flight.destination}</p>
+                            <p>Departure Date: {flight.departure_date}</p>
+                            <Button variant="secondary" onClick={() => handleNextStep(flight.id)}>
+                                Next Step
+                            </Button>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };
 
 const container = document.getElementById('app');
 const root = createRoot(container);
-root.render(<FlightsList/>);
+root.render(<FlightsSearch/>);
