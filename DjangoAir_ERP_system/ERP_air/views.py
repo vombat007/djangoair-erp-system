@@ -123,14 +123,14 @@ class FlightSearchAPIView(APIView):
         flights = Flight.objects.filter(
             destination__iexact=destination,
             departure_date__date=departure_date,
-            available_seats__gte=seats_count
+            airplane__seat__seat_type__quantity__gte=seats_count
         )
 
         # Serialize the query result and format the departure_date
         serializer = FlightSerializer(flights, many=True, context={'request': request})
         data = [{
             'departure_date':
-                f"{datetime.strptime(flight['departure_date'], '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%Y-%m-%d %H:%M')}",
+                f"{datetime.strptime(flight['departure_date'], '%Y-%m-%dT%H:%M:%SZ').strftime('%Y-%m-%d %H:%M')}",
             'destination':
                 flight['destination']} for flight in serializer.data]
 

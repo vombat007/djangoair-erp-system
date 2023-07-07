@@ -1,6 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models, IntegrityError
+from django.db.models import Count
 
 
 class MyUserManager(BaseUserManager):
@@ -90,19 +91,23 @@ class Flight(models.Model):
     airplane = models.OneToOneField('Airplane', on_delete=models.CASCADE)
     departure_date = models.DateTimeField()
     destination = models.CharField(max_length=255)
-    available_seats = models.IntegerField(default=20)
 
     def update_available_seats(self):
         booked_seats = Ticket.objects.filter(flight=self).count()
-        self.available_seats = self.airplane.seats.filter(is_available=True).count() - booked_seats
-        self.save()
+        available_seats = self.airplane.seat_set.values('seat_type').annotate(total=Count('id'))
+        for seat_type in available_seats:
+            seat_type_obj = SeatType.objects.get(id=seat_type['seat_type'])
+            quantity = seat_type_obj.quantity
+            booked_quantity = seat_type['total']
+            seat_type_obj.quantity = max(0, quantity - booked_quantity)
+            seat_type_obj.save()
 
 
 class Airplane(models.Model):
     name = models.CharField(max_length=255)
 
 
-class Seat(models.Model):
+class SeatType(models.Model):
     FIRST_CLASS = 'first_class'
     BUSINESS_CLASS = 'business_class'
     ECONOMY_CLASS = 'economy_class'
@@ -113,9 +118,13 @@ class Seat(models.Model):
         (ECONOMY_CLASS, 'Economy_class'),
     )
 
-    airplane = models.ForeignKey(Airplane, on_delete=models.CASCADE)
     seat_type = models.CharField(max_length=255, choices=SEAT_TYPE, default=ECONOMY_CLASS)
-    is_available = models.BooleanField(default=True)
+    quantity = models.IntegerField(default=0)
+
+
+class Seat(models.Model):
+    airplane = models.ForeignKey(Airplane, on_delete=models.CASCADE)
+    seat_type = models.ForeignKey(SeatType, on_delete=models.CASCADE)
 
 
 class Option(models.Model):
@@ -124,8 +133,18 @@ class Option(models.Model):
 
 
 class Ticket(models.Model):
+    MALE = 'male'
+    FEMALE = 'female'
+    GENDER = (
+        (MALE, 'Male'),
+        (FEMALE, 'Female'),
+    )
+
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    gender = models.CharField(max_length=30, choices=GENDER)
+    passport_id = models.CharField(max_length=25)
     price = models.IntegerField(null=True, blank=True)
-    customer = models.ForeignKey('User', on_delete=models.CASCADE)
     flight = models.ForeignKey(Flight, on_delete=models.CASCADE)
     seat = models.OneToOneField(Seat, on_delete=models.CASCADE)
-    option = models.ForeignKey(Option, on_delete=models.CASCADE)
+    option = models.ForeignKey(Option, on_delete=models.CASCADE, null=True, blank=True)

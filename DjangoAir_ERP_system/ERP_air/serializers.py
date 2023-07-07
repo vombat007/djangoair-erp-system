@@ -51,3 +51,8 @@ class FlightSerializer(serializers.ModelSerializer):
         model = Flight
         fields = '__all__'
 
+
+class TicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = '__all__'
