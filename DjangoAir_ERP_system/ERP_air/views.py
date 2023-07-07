@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .forms import CustomerCreationForm, CustomerLoginForm
 from .models import *
-from .serializers import CustomerCabinetSerializer, FlightSerializer
+from .serializers import *
 from datetime import datetime
 
 
@@ -135,3 +135,33 @@ class FlightSearchAPIView(APIView):
                 flight['destination']} for flight in serializer.data]
 
         return Response(data)
+
+
+class OptionsAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        flight_id = request.query_params.get('flight_id')
+
+        try:
+            flight = Flight.objects.get(id=flight_id)
+        except Flight.DoesNotExist:
+            return Response({"error": "Flight does not exist."},
+                            status=status.HTTP_404_NOT_FOUND)
+
+        seat_types = SeatType.objects.filter(seat__airplane=flight.airplane).distinct()
+        options = Option.objects.all()
+
+        seat_type_serializer = SeatTypeSerializer(seat_types, many=True)
+        option_serializer = OptionSerializer(options, many=True)
+
+        data = {
+            'seat_types': seat_type_serializer.data,
+            'options': option_serializer.data
+        }
+
+        return Response(data)
+
+
+class BookingFlightAPIView(APIView):
+    pass

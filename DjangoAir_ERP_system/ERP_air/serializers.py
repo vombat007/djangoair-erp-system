@@ -56,3 +56,15 @@ class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = '__all__'
+
+
+class SeatTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SeatType
+        fields = '__all__'
+
+
+class OptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Option
+        fields = '__all__'
