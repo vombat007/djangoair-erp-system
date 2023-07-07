@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.db.models import Sum
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -100,9 +101,8 @@ class FlightSearchAPIView(APIView):
     def get(self, request):
         destination = request.query_params.get('destination')
         departure_date = request.query_params.get('departure_date')
-        seats_count = request.query_params.get('seats_count')  # New parameter
+        seats_count = request.query_params.get('seats_count')
 
-        # Convert departure_date from YY/MM/DD to datetime object
         try:
             departure_date = datetime.strptime(departure_date, '%Y-%m-%d')
         except ValueError:
@@ -119,22 +119,23 @@ class FlightSearchAPIView(APIView):
 
         seats_count = int(seats_count)
 
-        # Query flights based on the destination, departure date, and available seats count
+        # Query flights based on the destination and departure date
         flights = Flight.objects.filter(
             destination__iexact=destination,
-            departure_date__date=departure_date,
-            airplane__seat__seat_type__quantity__gte=seats_count
+            departure_date__date=departure_date
         )
 
-        # Serialize the query result and format the departure_date
-        serializer = FlightSerializer(flights, many=True, context={'request': request})
-        data = [{
-            'departure_date':
-                f"{datetime.strptime(flight['departure_date'], '%Y-%m-%dT%H:%M:%SZ').strftime('%Y-%m-%d %H:%M')}",
-            'destination':
-                flight['destination']} for flight in serializer.data]
+        filtered_flights = []
+        for flight in flights:
+            total_quantity = flight.airplane.seat_set.aggregate(
+                total_quantity=Sum('seat_type__quantity'))['total_quantity']
+            if total_quantity is not None and total_quantity >= seats_count:
+                filtered_flights.append({
+                    'departure_date': flight.departure_date.strftime('%Y-%m-%d %H:%M'),
+                    'destination': flight.destination
+                })
 
-        return Response(data)
+        return Response(filtered_flights)
 
 
 class OptionsAPIView(APIView):
