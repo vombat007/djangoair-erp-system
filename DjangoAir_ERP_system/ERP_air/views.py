@@ -131,6 +131,7 @@ class FlightSearchAPIView(APIView):
                 total_quantity=Sum('seat_type__quantity'))['total_quantity']
             if total_quantity is not None and total_quantity >= seats_count:
                 filtered_flights.append({
+                    'flight_id': flight.id,
                     'departure_date': flight.departure_date.strftime('%Y-%m-%d %H:%M'),
                     'destination': flight.destination
                 })
