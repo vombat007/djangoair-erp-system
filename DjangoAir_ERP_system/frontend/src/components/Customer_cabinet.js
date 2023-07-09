@@ -24,8 +24,8 @@ const CustomerCabinetView = () => {
         try {
             const response = await axios.get('/api/customer_cabinet/');
             setCustomerData(response.data);
-            setFirstName(response.data.user.first_name);
-            setLastName(response.data.user.last_name);
+            setFirstName(response.data.user.first_name || ''); // Initialize to response data or empty string
+            setLastName(response.data.user.last_name || ''); // Initialize to response data or empty string
         } catch (error) {
             console.error('Error fetching customer data:', error);
         }
