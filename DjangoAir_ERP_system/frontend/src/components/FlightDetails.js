@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import {Button, Form} from "react-bootstrap";
 
 const FlightDetails = ({flightId, handleBack}) => {
     const [seatTypes, setSeatTypes] = useState([]);
@@ -29,7 +30,7 @@ const FlightDetails = ({flightId, handleBack}) => {
             <h3>Seat Types</h3>
             <ul>
                 {seatTypes.map((seatType) => (
-                    <li key={seatType.id}>{seatType.seat_type} Quantity of seats {seatType.quantity}</li>
+                    <li key={seatType.id}> {seatType.seat_type} Price {seatType.price} Quantity of seats {seatType.quantity}</li>
                 ))}
             </ul>
             <h3>Options</h3>
@@ -38,7 +39,9 @@ const FlightDetails = ({flightId, handleBack}) => {
                     <li key={option.id}>{option.name} Price {option.price}</li>
                 ))}
             </ul>
-            <button onClick={handleBack}>Back</button>
+            <Button variant="secondary" onClick={handleBack}>
+                Back
+            </Button>
 
         </div>
     );

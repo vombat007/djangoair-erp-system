@@ -120,6 +120,7 @@ class SeatType(models.Model):
 
     seat_type = models.CharField(max_length=255, choices=SEAT_TYPE, default=ECONOMY_CLASS)
     quantity = models.IntegerField(default=0)
+    price = models.IntegerField()
 
 
 class Seat(models.Model):
