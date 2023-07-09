@@ -1,3 +1,5 @@
+from enum import unique
+
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models, IntegrityError
@@ -141,11 +143,13 @@ class Ticket(models.Model):
         (FEMALE, 'Female'),
     )
 
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    flight = models.ForeignKey(Flight, on_delete=models.CASCADE)
+    ticket_number = models.CharField(max_length=20, unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=30, choices=GENDER)
     passport_id = models.CharField(max_length=25)
     price = models.IntegerField(null=True, blank=True)
-    flight = models.ForeignKey(Flight, on_delete=models.CASCADE)
     seat = models.OneToOneField(Seat, on_delete=models.CASCADE)
     option = models.ForeignKey(Option, on_delete=models.CASCADE, null=True, blank=True)

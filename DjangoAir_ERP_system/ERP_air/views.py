@@ -4,7 +4,6 @@ from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .forms import CustomerCreationForm, CustomerLoginForm
-from .models import *
 from .serializers import *
 from datetime import datetime
 
@@ -166,4 +165,7 @@ class OptionsAPIView(APIView):
 
 
 class BookingFlightAPIView(APIView):
-    pass
+    def post(self, request):
+        user = request.user
+        pass
+
