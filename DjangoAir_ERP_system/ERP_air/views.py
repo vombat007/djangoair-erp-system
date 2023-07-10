@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
-from django.db.models import Sum
+from django.db.models import Sum, F
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -187,7 +187,7 @@ class BookingFlightAPIView(APIView):
 
         # Check if seat exists and is available
         try:
-            seat = Seat.objects.get(pk=seat_id, airplane=flight.airplane)
+            seat = Seat.objects.select_for_update().get(pk=seat_id, airplane=flight.airplane)
             if seat.is_booked:
                 return Response({"error": "Seat is already booked."},
                                 status=status.HTTP_400_BAD_REQUEST)
@@ -211,6 +211,8 @@ class BookingFlightAPIView(APIView):
         if serializer.is_valid():
             serializer.save()
             seat.is_booked = True
+            seat.seat_type.quantity = F('quantity') - 1  # Decrease the quantity by 1
+            seat.seat_type.save()
             seat.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
