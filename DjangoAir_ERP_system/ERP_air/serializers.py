@@ -64,7 +64,7 @@ class SeatTypeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class OptionSerializer(serializers.ModelSerializer):
+class OptionsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Option
+        model = Options
         fields = '__all__'

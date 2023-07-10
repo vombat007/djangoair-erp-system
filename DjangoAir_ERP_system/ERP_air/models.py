@@ -130,7 +130,7 @@ class Seat(models.Model):
     seat_type = models.ForeignKey(SeatType, on_delete=models.CASCADE)
 
 
-class Option(models.Model):
+class Options(models.Model):
     name = models.CharField(max_length=255)
     price = models.IntegerField()
 
@@ -152,4 +152,4 @@ class Ticket(models.Model):
     passport_id = models.CharField(max_length=25)
     price = models.IntegerField(null=True, blank=True)
     seat = models.OneToOneField(Seat, on_delete=models.CASCADE)
-    option = models.ForeignKey(Option, on_delete=models.CASCADE, null=True, blank=True)
+    options = models.ForeignKey(Options, on_delete=models.CASCADE, null=True, blank=True)

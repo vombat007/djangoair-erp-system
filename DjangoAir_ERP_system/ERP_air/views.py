@@ -151,10 +151,10 @@ class OptionsAPIView(APIView):
                             status=status.HTTP_404_NOT_FOUND)
 
         seat_types = SeatType.objects.filter(seat__airplane=flight.airplane).distinct()
-        options = Option.objects.all()
+        options = Options.objects.all()
 
         seat_type_serializer = SeatTypeSerializer(seat_types, many=True)
-        option_serializer = OptionSerializer(options, many=True)
+        option_serializer = OptionsSerializer(options, many=True)
 
         data = {
             'seat_types': seat_type_serializer.data,
