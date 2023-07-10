@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from .forms import CustomerCreationForm, CustomerLoginForm
 from .serializers import *
 from datetime import datetime
+from .utils import generate_random_code
 
 
 class CustomerRegistrationAPIView(APIView):
@@ -165,7 +166,52 @@ class OptionsAPIView(APIView):
 
 
 class BookingFlightAPIView(APIView):
-    def post(self, request):
-        user = request.user
-        pass
+    permission_classes = [permissions.IsAuthenticated]
 
+    def post(self, request):
+        flight_id = request.data.get('flight_id')
+        seat_id = request.data.get('seat_id')
+        option_id = request.data.get('option_id', None)
+
+        first_name = request.data.get('first_name')
+        last_name = request.data.get('last_name')
+        gender = request.data.get('gender')
+        passport_number = request.data.get('passport_number')
+
+        # Check if flight exists
+        try:
+            flight = Flight.objects.get(pk=flight_id)
+        except Flight.DoesNotExist:
+            return Response({"error": "Flight does not exist."},
+                            status=status.HTTP_404_NOT_FOUND)
+
+        # Check if seat exists and is available
+        try:
+            seat = Seat.objects.get(pk=seat_id, airplane=flight.airplane)
+            if seat.is_booked:
+                return Response({"error": "Seat is already booked."},
+                                status=status.HTTP_400_BAD_REQUEST)
+        except Seat.DoesNotExist:
+            return Response({"error": "Seat does not exist."},
+                            status=status.HTTP_404_NOT_FOUND)
+
+        # Create the ticket
+        ticket_data = {
+            "user": request.user.id,
+            "flight": flight_id,
+            "seat": seat_id,
+            "option": option_id,
+            "gender": gender,
+            "first_name": first_name,
+            "last_name": last_name,
+            "passport_number": passport_number,
+            "ticket_number": generate_random_code(),
+        }
+        serializer = TicketSerializer(data=ticket_data)
+        if serializer.is_valid():
+            serializer.save()
+            seat.is_booked = True
+            seat.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

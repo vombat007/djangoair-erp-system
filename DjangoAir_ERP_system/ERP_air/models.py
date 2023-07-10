@@ -1,5 +1,3 @@
-from enum import unique
-
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models, IntegrityError
@@ -94,16 +92,6 @@ class Flight(models.Model):
     departure_date = models.DateTimeField()
     destination = models.CharField(max_length=255)
 
-    def update_available_seats(self):
-        booked_seats = Ticket.objects.filter(flight=self).count()
-        available_seats = self.airplane.seat_set.values('seat_type').annotate(total=Count('id'))
-        for seat_type in available_seats:
-            seat_type_obj = SeatType.objects.get(id=seat_type['seat_type'])
-            quantity = seat_type_obj.quantity
-            booked_quantity = seat_type['total']
-            seat_type_obj.quantity = max(0, quantity - booked_quantity)
-            seat_type_obj.save()
-
 
 class Airplane(models.Model):
     name = models.CharField(max_length=255)
@@ -128,6 +116,7 @@ class SeatType(models.Model):
 class Seat(models.Model):
     airplane = models.ForeignKey(Airplane, on_delete=models.CASCADE)
     seat_type = models.ForeignKey(SeatType, on_delete=models.CASCADE)
+    is_booked = models.BooleanField(default=False)
 
 
 class Options(models.Model):
@@ -145,11 +134,11 @@ class Ticket(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     flight = models.ForeignKey(Flight, on_delete=models.CASCADE)
-    ticket_number = models.CharField(max_length=20, unique=True)
+    ticket_number = models.CharField(max_length=10, unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=30, choices=GENDER)
-    passport_id = models.CharField(max_length=25)
+    passport_number = models.CharField(max_length=25)
     price = models.IntegerField(null=True, blank=True)
     seat = models.OneToOneField(Seat, on_delete=models.CASCADE)
     options = models.ForeignKey(Options, on_delete=models.CASCADE, null=True, blank=True)
