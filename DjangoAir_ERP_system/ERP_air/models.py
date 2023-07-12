@@ -140,4 +140,4 @@ class Ticket(models.Model):
     passport_number = models.CharField(max_length=25)
     price = models.IntegerField(null=True, blank=True)
     seat = models.OneToOneField(Seat, on_delete=models.CASCADE)
-    options = models.ForeignKey(Options, on_delete=models.CASCADE, null=True, blank=True)
+    options = models.ManyToManyField(Options, blank=True)

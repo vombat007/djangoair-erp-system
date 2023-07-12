@@ -168,10 +168,16 @@ class OptionsAPIView(APIView):
 class BookingFlightAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
+    def get(self, request):
+        user = request.user
+        tickets = Ticket.objects.filter(user=user)
+        serializer = TicketSerializer(tickets, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def post(self, request):
         flight_id = request.data.get('flight_id')
         seat_id = request.data.get('seat_id')
-        option_id = request.data.get('option_id', None)
+        option_ids = request.data.get('option_ids', [])
 
         first_name = request.data.get('first_name')
         last_name = request.data.get('last_name')
@@ -197,23 +203,26 @@ class BookingFlightAPIView(APIView):
 
         # Create the ticket
         ticket_data = {
+            "ticket_number": generate_random_code(),
             "user": request.user.id,
             "flight": flight_id,
             "seat": seat_id,
-            "option": option_id,
             "gender": gender,
             "first_name": first_name,
             "last_name": last_name,
             "passport_number": passport_number,
-            "ticket_number": generate_random_code(),
         }
         serializer = TicketSerializer(data=ticket_data)
         if serializer.is_valid():
-            serializer.save()
+            ticket = serializer.save()
             seat.is_booked = True
-            seat.seat_type.quantity = F('quantity') - 1  # Decrease the quantity by 1
+            seat.seat_type.quantity = F('quantity') - 1
             seat.seat_type.save()
             seat.save()
+            if option_ids:
+                ticket.options.add(*option_ids)
+                serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
+            print(serializer.errors)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

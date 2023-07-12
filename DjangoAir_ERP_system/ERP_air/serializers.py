@@ -52,7 +52,14 @@ class FlightSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class OptionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Options
+        fields = '__all__'
+
+
 class TicketSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Ticket
         fields = '__all__'
@@ -61,10 +68,4 @@ class TicketSerializer(serializers.ModelSerializer):
 class SeatTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = SeatType
-        fields = '__all__'
-
-
-class OptionsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Options
         fields = '__all__'
