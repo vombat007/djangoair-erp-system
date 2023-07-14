@@ -214,6 +214,9 @@ class BookingFlightAPIView(APIView):
         }
         serializer = TicketSerializer(data=ticket_data)
         if serializer.is_valid():
+            if seat.seat_type.quantity <= 0:
+                return Response({"error": "No seat left."},
+                                status=status.HTTP_404_NOT_FOUND)
             ticket = serializer.save()
             seat.is_booked = True
             seat.seat_type.quantity = F('quantity') - 1
