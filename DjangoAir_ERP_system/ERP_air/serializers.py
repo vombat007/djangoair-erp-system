@@ -68,3 +68,9 @@ class SeatTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = SeatType
         fields = '__all__'
+
+
+class SeatSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Seat
+        fields = '__all__'

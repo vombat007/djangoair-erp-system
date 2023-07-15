@@ -1,12 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import {Button, Form} from 'react-bootstrap';
+import BookingForm from './BookingForm';
 
 const FlightDetails = ({flightId, handleBack}) => {
     const [seatTypes, setSeatTypes] = useState([]);
     const [options, setOptions] = useState([]);
-    const [selectedSeatType, setSelectedSeatType] = useState('');
+    const [selectedSeatType, setSelectedSeatType] = useState(null);
     const [selectedOptions, setSelectedOptions] = useState([]);
+    const [showBookingForm, setShowBookingForm] = useState(false);
 
     useEffect(() => {
         axios
@@ -53,44 +55,70 @@ const FlightDetails = ({flightId, handleBack}) => {
         return totalPrice;
     };
 
+    const handleNextStep = () => {
+        setShowBookingForm(true);
+    };
+
+    const handleBookingComplete = () => {
+        // Reset the selected seat type and options
+        setSelectedSeatType(null);
+        setSelectedOptions([]);
+        setShowBookingForm(false);
+    };
+
     return (
         <div>
-            <h2>Seat Type Options</h2>
-            <p>Flight ID: {flightId}</p>
+            {!showBookingForm ? (
+                <div>
+                    <h2>Seat Type Options</h2>
+                    <p>Flight ID: {flightId}</p>
 
-            {/* Render the seat types */}
-            <h3>Seat Types</h3>
-            <Form>
-                {seatTypes.map((seatType) => (
-                    <Form.Check
-                        key={seatType.id}
-                        type="radio"
-                        label={`${seatType.seat_type} Price ${seatType.price} Quantity of seats ${seatType.quantity}`}
-                        value={seatType.seat_type}
-                        name="seatType"
-                        checked={selectedSeatType && selectedSeatType.id === seatType.id}
-                        onChange={handleSeatTypeChange}
-                    />
-                ))}
-                <h3>Options</h3>
-                {options.map((option) => (
-                    <Form.Check
-                        key={option.id}
-                        type="checkbox"
-                        label={`${option.name} Price ${option.price}`}
-                        value={option.id}
-                        checked={selectedOptions.some((opt) => opt.id === option.id)}
-                        onChange={handleOptionChange}
-                    />
-                ))}
-            </Form>
+                    {/* Render the seat types */}
+                    <h3>Seat Types</h3>
+                    <Form>
+                        {seatTypes.map((seatType) => (
+                            <Form.Check
+                                key={seatType.id}
+                                type="radio"
+                                label={`${seatType.seat_type} Price ${seatType.price} Quantity of seats ${seatType.quantity}`}
+                                value={seatType.seat_type}
+                                name="seatType"
+                                checked={selectedSeatType && selectedSeatType.id === seatType.id}
+                                onChange={handleSeatTypeChange}
+                            />
+                        ))}
+                        <h3>Options</h3>
+                        {options.map((option) => (
+                            <Form.Check
+                                key={option.id}
+                                type="checkbox"
+                                label={`${option.name} Price ${option.price}`}
+                                value={option.id}
+                                checked={selectedOptions.some((opt) => opt.id === option.id)}
+                                onChange={handleOptionChange}
+                            />
+                        ))}
+                    </Form>
 
-            {/* Display the total price */}
-            <p>Total Price: {calculateTotalPrice()}</p>
+                    {/* Display the total price */}
+                    <p>Total Price: {calculateTotalPrice()}</p>
 
-            <Button variant="secondary" onClick={handleBack}>
-                Back
-            </Button>
+                    <Button variant="secondary" onClick={handleBack}>
+                        Back
+                    </Button>
+                    <Button variant="primary" onClick={handleNextStep}>
+                        Next Step
+                    </Button>
+                </div>
+            ) : (
+                <BookingForm
+                    flightId={flightId}
+                    selectedSeatType={selectedSeatType}
+                    selectedOptions={selectedOptions}
+                    totalPrice={calculateTotalPrice()}
+                    onBookingComplete={handleBookingComplete}
+                />
+            )}
         </div>
     );
 };

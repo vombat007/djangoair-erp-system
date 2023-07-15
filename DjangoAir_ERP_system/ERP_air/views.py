@@ -148,18 +148,20 @@ class OptionsAPIView(APIView):
         try:
             flight = Flight.objects.get(id=flight_id)
         except Flight.DoesNotExist:
-            return Response({"error": "Flight does not exist."},
-                            status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Flight does not exist."}, status=status.HTTP_404_NOT_FOUND)
 
         seat_types = SeatType.objects.filter(seat__airplane=flight.airplane).distinct()
         options = Options.objects.all()
+        seats = Seat.objects.filter(airplane=flight.airplane)
 
         seat_type_serializer = SeatTypeSerializer(seat_types, many=True)
         option_serializer = OptionsSerializer(options, many=True)
+        seat_serializer = SeatSerializer(seats, many=True)
 
         data = {
+            'seats': seat_serializer.data,
             'seat_types': seat_type_serializer.data,
-            'options': option_serializer.data
+            'options': option_serializer.data,
         }
 
         return Response(data)
@@ -179,6 +181,7 @@ class BookingFlightAPIView(APIView):
         seat_id = request.data.get('seat_id')
         option_ids = request.data.get('option_ids', [])
 
+        price = request.data.get('price')
         first_name = request.data.get('first_name')
         last_name = request.data.get('last_name')
         gender = request.data.get('gender')
@@ -211,6 +214,7 @@ class BookingFlightAPIView(APIView):
             "first_name": first_name,
             "last_name": last_name,
             "passport_number": passport_number,
+            "price": price,
         }
         serializer = TicketSerializer(data=ticket_data)
         if serializer.is_valid():
