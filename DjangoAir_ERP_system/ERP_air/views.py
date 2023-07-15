@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
-from django.db.models import Sum, F
+from django.db.models import Sum, F, Count
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -127,13 +127,30 @@ class FlightSearchAPIView(APIView):
 
         filtered_flights = []
         for flight in flights:
-            total_quantity = flight.airplane.seat_set.aggregate(
-                total_quantity=Sum('seat_type__quantity'))['total_quantity']
+            seat_types = flight.airplane.seat_set.filter(is_booked=False).values(
+                'seat_type__seat_type',
+                'seat_type__quantity',
+                'seat_type__price'
+            ).annotate(available_quantity=Sum('seat_type__quantity')).distinct()
+
+            total_quantity = sum(seat_type['seat_type__quantity'] for seat_type in seat_types)
+
             if total_quantity is not None and total_quantity >= seats_count:
+                filtered_seat_types = []
+                for seat_type in seat_types:
+                    filtered_seat_types.append({
+                        'seat_type': seat_type['seat_type__seat_type'],
+                        'quantity': seat_type['seat_type__quantity'],
+                        'price': seat_type['seat_type__price'],
+                    })
+                    # Break the loop after adding the first seat type
+                    break
+
                 filtered_flights.append({
                     'flight_id': flight.id,
                     'departure_date': flight.departure_date.strftime('%Y-%m-%d %H:%M'),
-                    'destination': flight.destination
+                    'destination': flight.destination,
+                    'free_seat_count': total_quantity,
                 })
 
         return Response(filtered_flights)
