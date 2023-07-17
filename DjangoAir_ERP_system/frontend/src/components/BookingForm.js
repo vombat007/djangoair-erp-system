@@ -12,7 +12,13 @@ const getCSRFToken = () => {
     return getCookie('csrftoken');
 };
 
-const BookingForm = ({flightId, selectedSeatType, selectedOptions, totalPrice}) => {
+const BookingForm = ({
+                         flightId,
+                         selectedSeatType,
+                         selectedOptions,
+                         totalPrice,
+                         onBack // Add onBack prop to handle back button click
+                     }) => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [gender, setGender] = useState('');
@@ -104,6 +110,11 @@ const BookingForm = ({flightId, selectedSeatType, selectedOptions, totalPrice}) 
                 </Form.Group>
 
                 <p>Total Price: {totalPrice}</p>
+
+                {/* Add back button */}
+                <Button variant="secondary" onClick={onBack}>
+                    Back
+                </Button>
 
                 <Button variant="primary" type="submit">
                     Book Flight
