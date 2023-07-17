@@ -156,7 +156,7 @@ class FlightSearchAPIView(APIView):
         return Response(filtered_flights)
 
 
-class OptionsAPIView(APIView):
+class FlightDetailsAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):

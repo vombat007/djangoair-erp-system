@@ -12,7 +12,7 @@ const FlightDetails = ({flightId, handleBack}) => {
 
     useEffect(() => {
         axios
-            .get('/api/flight/options/', {
+            .get('/api/flight/details/', {
                 params: {
                     flight_id: flightId,
                 },
