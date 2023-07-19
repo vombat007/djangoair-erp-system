@@ -115,7 +115,7 @@ const FlightDetails = ({flightId, handleBack}) => {
             ) : (
                 <BookingForm
                     flightId={flightId}
-                    selectedSeatType={selectedSeatType}
+                    selectedSeat={selectedSeatType}
                     selectedOptions={selectedOptions}
                     totalPrice={calculateTotalPrice()}
                     onBack={handleBack} // Pass handleBack function to BookingForm component

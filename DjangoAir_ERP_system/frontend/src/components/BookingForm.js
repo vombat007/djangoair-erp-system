@@ -14,7 +14,7 @@ const getCSRFToken = () => {
 
 const BookingForm = ({
                          flightId,
-                         selectedSeatType,
+                         selectedSeat,
                          selectedOptions,
                          totalPrice,
                          onBack // Add onBack prop to handle back button click
@@ -30,7 +30,7 @@ const BookingForm = ({
         // Prepare the data for API request
         const requestData = {
             flight_id: flightId,
-            seat_id: selectedSeatType.id,
+            seat_id: selectedSeat.id,
             price: totalPrice,
             option_ids: selectedOptions.map((option) => option.id),
             first_name: firstName,
