@@ -30,7 +30,7 @@ const BookingForm = ({
         // Prepare the data for API request
         const requestData = {
             flight_id: flightId,
-            seat_id: selectedSeat.id,
+            seat_id: selectedSeat,
             price: totalPrice,
             option_ids: selectedOptions.map((option) => option.id),
             first_name: firstName,
