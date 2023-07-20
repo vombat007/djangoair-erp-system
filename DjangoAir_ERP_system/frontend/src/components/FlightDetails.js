@@ -6,7 +6,7 @@ import BookingForm from './BookingForm';
 const FlightDetails = ({flightId, handleBack}) => {
     const [seatTypes, setSeatTypes] = useState([]);
     const [options, setOptions] = useState([]);
-    const [selectedSeat, setSelectedSeat] = useState(null);
+    const [selectedSeat, setSelectedSeat] = useState({});
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [showBookingForm, setShowBookingForm] = useState(false);
     const [availableSeats, setAvailableSeats] = useState([]);
@@ -72,8 +72,7 @@ const FlightDetails = ({flightId, handleBack}) => {
     };
 
     const handleBookingComplete = () => {
-        // Reset the selected seat and options
-        setSelectedSeat(null);
+        setSelectedSeat({}); // Reset to an empty object instead of null
         setSelectedOptions([]);
         setShowBookingForm(false);
     };
