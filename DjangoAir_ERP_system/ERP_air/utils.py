@@ -1,5 +1,8 @@
 import random
 import string
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
 def generate_random_code():
@@ -13,3 +16,27 @@ def generate_random_code():
         if code not in generated_codes:
             generated_codes.add(code)
             return code
+
+
+def send_ticket_email(user, ticket_data):
+    subject = 'Ticket Data'
+    html_message_ticket = render_to_string(
+        'Ticket.html',
+        {'user': user, 'ticket_data': ticket_data})
+
+    html_message_bill = render_to_string(
+        'Bill.html',
+        {'user': user, 'ticket_data': ticket_data})
+
+    plain_message_ticket = strip_tags(html_message_ticket)
+    plain_message_bill = strip_tags(html_message_bill)
+
+    send_mail(subject, plain_message_ticket,
+              'Ticket Data <vombat007@gmail.com>',
+              [user.email], html_message=html_message_ticket)
+
+    send_mail(subject, plain_message_bill,
+              'Bill <vombat007@gmail.com>',
+              [user.email], html_message=html_message_bill)
+
+    print('Email Send')

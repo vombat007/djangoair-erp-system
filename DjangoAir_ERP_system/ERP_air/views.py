@@ -1,12 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
-from django.db.models import Sum, F, Count
+from django.db.models import Sum, F
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .forms import CustomerCreationForm, CustomerLoginForm
 from .serializers import *
 from datetime import datetime
-from .utils import generate_random_code
+from .utils import generate_random_code, send_ticket_email
 
 
 class CustomerRegistrationAPIView(APIView):
@@ -194,6 +194,7 @@ class BookingFlightAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        user = request.user
         flight_id = request.data.get('flight_id')
         seat_id = request.data.get('seat_id')
         option_ids = request.data.get('option_ids', [])
@@ -243,6 +244,9 @@ class BookingFlightAPIView(APIView):
             seat.seat_type.quantity = F('quantity') - 1
             seat.seat_type.save()
             seat.save()
+
+            send_ticket_email(user, [ticket_data])
+
             if option_ids:
                 ticket.options.add(*option_ids)
                 serializer.save()

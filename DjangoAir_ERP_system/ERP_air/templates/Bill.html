@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket</title>
+</head>
+<body>
+    <h1>Bill</h1>
+    <p>Hello {{ user.email }},</p>
+    <p>Here is the Bill information for your flight:</p>
+
+    {% for data in ticket_data %}
+        <h2>Ticket Number - {{ data.ticket_number }}</h2>
+        <p>First Name - {{ data.first_name }}</p>
+        <p>Last Name - {{ data.last_name }} </p>
+        <p>Total Cash - {{ data.price }} $</p>
+
+    {% endfor %}
+
+    <br>
+    <p>Thank you for using our AIR service.</p>
+    <p>Best regards,</p>
+    <p>Your AIR Team</p>
+</body>
+</html>
