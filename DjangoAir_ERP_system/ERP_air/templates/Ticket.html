@@ -10,16 +10,24 @@
 <p>Hello {{ user.email }},</p>
 <p>Here is the ticket information for your flight:</p>
 
-{% for data in ticket_data %}
 <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
 
-    <h2 style="background-color: #f0f0f0; padding: 10px; border-radius: 5px;">Ticket Number - {{ data.ticket_number }}</h2>
-    <p>First Name - {{ data.first_name }}</p>
-    <p>Last Name - {{ data.last_name }} </p>
-    <p>Gender - {{ data.gender }}</p>
-    <p>Passport Number - {{ data.passport_number }} </p>
+    <h2 style="background-color: #f0f0f0; padding: 10px; border-radius: 5px;">Ticket Number - {{ ticket.ticket_number }}</h2>
+    <p>First Name - {{ ticket.first_name }}</p>
+    <p>Last Name - {{ ticket.last_name }} </p>
+    <p>Gender - {{ ticket.gender }}</p>
+    <p>Passport Number - {{ ticket.passport_number }} </p>
+
+    {% if ticket.options.all %}
+        <h3>Options:</h3>
+        <ul>
+            {% for option in ticket.options.all %}
+                <li>{{ option.name }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
 </div>
-{% endfor %}
 
 <br>
 <p style="text-align: right; margin-top: 40px;">Thank you for using our AIR service.</p>

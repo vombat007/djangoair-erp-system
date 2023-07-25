@@ -18,15 +18,15 @@ def generate_random_code():
             return code
 
 
-def send_ticket_email(user, ticket_data):
+def send_ticket_email(user, ticket):
     subject = 'Ticket Data'
     html_message_ticket = render_to_string(
         'Ticket.html',
-        {'user': user, 'ticket_data': ticket_data})
+        {'user': user, 'ticket': ticket})
 
     html_message_bill = render_to_string(
         'Bill.html',
-        {'user': user, 'ticket_data': ticket_data})
+        {'user': user, 'ticket': ticket})
 
     plain_message_ticket = strip_tags(html_message_ticket)
     plain_message_bill = strip_tags(html_message_bill)

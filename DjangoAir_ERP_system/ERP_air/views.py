@@ -233,6 +233,7 @@ class BookingFlightAPIView(APIView):
             "last_name": last_name,
             "passport_number": passport_number,
             "price": price,
+            "options": option_ids,
         }
         serializer = TicketSerializer(data=ticket_data)
         if serializer.is_valid():
@@ -245,7 +246,7 @@ class BookingFlightAPIView(APIView):
             seat.seat_type.save()
             seat.save()
 
-            send_ticket_email(user, [ticket_data])
+            send_ticket_email(user, ticket)
 
             if option_ids:
                 ticket.options.add(*option_ids)
