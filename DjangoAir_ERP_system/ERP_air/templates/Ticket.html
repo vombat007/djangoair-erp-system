@@ -17,9 +17,10 @@
     <p>Last Name - {{ ticket.last_name }} </p>
     <p>Gender - {{ ticket.gender }}</p>
     <p>Passport Number - {{ ticket.passport_number }} </p>
+    <p>Seat Type - {{ ticket.seat.seat_type.seat_type }}</p>
 
     {% if ticket.options.all %}
-        <h3>Options:</h3>
+        <p>Options:</p>
         <ul>
             {% for option in ticket.options.all %}
                 <li>{{ option.name }}</li>

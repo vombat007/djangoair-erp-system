@@ -16,15 +16,16 @@
     <p>Last Name - {{ ticket.last_name }} </p>
 
         {% if ticket.options.all %}
-        <h3>Options:</h3>
+        <p>Options:</p>
         <ul>
             {% for option in ticket.options.all %}
                 <li>{{ option.name }} - {{ option.price }} $</li>
             {% endfor %}
         </ul>
-    {% endif %}
+        {% endif %}
 
-    <p style="font-weight: bold;">Total Cash - {{ ticket.price }} $</p>
+    <p>Seat Type Price - {{ ticket.seat.seat_type.price }} $</p>
+    <h3 style="font-weight: bold;">Total Cash - {{ ticket.price }} $</h3>
 </div>
 
 <p style="text-align: right; margin-top: 40px;">Thank you for using our AIR service.</p>
