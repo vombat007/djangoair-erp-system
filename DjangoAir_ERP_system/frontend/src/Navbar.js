@@ -2,7 +2,6 @@ import React from 'react';
 import {createRoot} from 'react-dom/client';
 import Registrate from './components/Registrate';
 import Login from './components/Login';
-import CustomerCabinetView from "./components/Customer_cabinet";
 
 const Navbar = () => {
     return (
@@ -20,20 +19,18 @@ const Navbar = () => {
                     </li>
 
                     <li className="nav-item">
-                        <Registrate />
+                        <Registrate/>
                     </li>
                     <li className="nav-item">
-                        <Login />
+                        <Login/>
                     </li>
-                  <li className="nav-item">
-                        <CustomerCabinetView />
-                    </li>
+
                 </ul>
             </div>
         </nav>
     );
 };
 
-const container = document.getElementById('root');
+const container = document.getElementById('navbar');
 const root = createRoot(container);
 root.render(<Navbar/>);

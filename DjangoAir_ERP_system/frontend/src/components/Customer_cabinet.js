@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import {createRoot} from "react-dom/client";
 
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -65,50 +66,37 @@ const CustomerCabinetView = () => {
 
     return (
         <div>
-            <div className="dropdown">
-                <button
-                    type="button"
-                    className="btn btn-primary dropdown-toggle"
-                    id="cabinetDropdown"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                >
-                    Cabinet
-                </button>
-                <ul className="dropdown-menu" aria-labelledby="cabinetDropdown">
-                    <h1>{customerData.first_name} Cabinet</h1>
-                    <div>
-                        <h2>Discount: {customerData.discount} %</h2>
-                        <h2>Future Flight: {customerData.future_flight}</h2>
-                        <h2>Previous Flight: {customerData.previous_flight}</h2>
-                    </div>
-                    <form onSubmit={handleSubmit}>
-                        <div className="form-group">
-                            <label htmlFor="firstName">First Name:</label>
-                            <input
-                                type="text"
-                                id="firstName"
-                                className="form-control"
-                                value={firstName}
-                                onChange={handleFirstNameChange}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="lastName">Last Name:</label>
-                            <input
-                                type="text"
-                                id="lastName"
-                                className="form-control"
-                                value={lastName}
-                                onChange={handleLastNameChange}
-                            />
-                        </div>
-                        <button type="submit" className="btn btn-primary">
-                            Update
-                        </button>
-                    </form>
-                </ul>
+            <h1>{customerData.first_name} Cabinet</h1>
+            <div>
+                <h2>Discount: {customerData.discount} %</h2>
+                <h2>Future Flight: {customerData.future_flight}</h2>
+                <h2>Previous Flight: {customerData.previous_flight}</h2>
             </div>
+            <form onSubmit={handleSubmit}>
+                <div className="form-group">
+                    <label htmlFor="firstName">First Name:</label>
+                    <input
+                        type="text"
+                        id="firstName"
+                        className="form-control"
+                        value={firstName}
+                        onChange={handleFirstNameChange}
+                    />
+                </div>
+                <div className="form-group">
+                    <label htmlFor="lastName">Last Name:</label>
+                    <input
+                        type="text"
+                        id="lastName"
+                        className="form-control"
+                        value={lastName}
+                        onChange={handleLastNameChange}
+                    />
+                </div>
+                <button type="submit" className="btn btn-primary">
+                    Update
+                </button>
+            </form>
             <style>
                 {`
         .form-control {
@@ -120,4 +108,6 @@ const CustomerCabinetView = () => {
     );
 };
 
-export default CustomerCabinetView;
+const container = document.getElementById('cabinet');
+const root = createRoot(container);
+root.render(<CustomerCabinetView/>);

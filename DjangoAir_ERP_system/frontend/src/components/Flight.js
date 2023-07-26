@@ -114,6 +114,6 @@ const FlightsSearch = () => {
     );
 };
 
-const container = document.getElementById('app');
+const container = document.getElementById('flight');
 const root = createRoot(container);
 root.render(<FlightsSearch/>);
