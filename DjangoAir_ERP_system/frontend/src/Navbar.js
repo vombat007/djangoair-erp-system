@@ -55,6 +55,4 @@ const Navbar = () => {
     );
 };
 
-const container = document.getElementById('navbar');
-const root = createRoot(container);
-root.render(<Navbar/>);
+export default Navbar;
