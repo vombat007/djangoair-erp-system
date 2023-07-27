@@ -91,7 +91,7 @@ const FlightDetails = ({flightId, handleBack}) => {
                             <Form.Check
                                 key={seatType.id}
                                 type="radio"
-                                label={`${seatType.seat_type} Price ${seatType.price} Quantity of seats ${seatType.quantity}`}
+                                label={`${seatType.seat_type} Price ${seatType.price}$ Quantity of seats ${seatType.quantity}`}
                                 value={seatType.seat_type}
                                 name="seatType"
                                 checked={selectedSeat && selectedSeat.id === seatType.id}
@@ -103,7 +103,7 @@ const FlightDetails = ({flightId, handleBack}) => {
                             <Form.Check
                                 key={option.id}
                                 type="checkbox"
-                                label={`${option.name} Price ${option.price}`}
+                                label={`${option.name} Price ${option.price}$`}
                                 value={option.id}
                                 checked={selectedOptions.some((opt) => opt.id === option.id)}
                                 onChange={handleOptionChange}
@@ -112,7 +112,7 @@ const FlightDetails = ({flightId, handleBack}) => {
                     </Form>
 
                     {/* Display the total price */}
-                    <p>Total Price: {calculateTotalPrice()}</p>
+                    <p>Total Price: {calculateTotalPrice()}$</p>
 
                     {/* Add back button */}
                     <Button variant="secondary" onClick={handleBack}>

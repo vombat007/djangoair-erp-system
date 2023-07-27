@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import Registrate from './components/Registrate';
-import Login from './components/Login';
-import CustomerCabinetView from "./components/Customer_cabinet"
-import FlightsSearch from "./components/Flight";
+import Registrate from './Registrate';
+import Login from './Login';
+import CustomerCabinetView from "./Customer_cabinet"
+import FlightsSearch from "./Flight";
 
 
 const Navbar = () => {
@@ -41,12 +41,7 @@ const Navbar = () => {
                                 Home
                             </a>
                         </li>
-                        <li className="nav-item">
-                            <Registrate/>
-                        </li>
-                        <li className="nav-item">
-                            <Login/>
-                        </li>
+
                         <li className="nav-item">
                             {/* "Cabinet" button */}
                             <button className="nav-link" onClick={handleCabinetClick}>
@@ -57,6 +52,12 @@ const Navbar = () => {
                             <button className="nav-link" onClick={handleFlightSearchClick}>
                                 Flight Search
                             </button>
+                        </li>
+                        <li className="nav-item">
+                            <Registrate/>
+                        </li>
+                        <li className="nav-item">
+                            <Login/>
                         </li>
                     </ul>
                 </div>

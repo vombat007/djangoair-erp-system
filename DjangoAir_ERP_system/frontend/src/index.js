@@ -5,7 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import {createRoot} from "react-dom/client";
 import React from "react";
 
-import Navbar from "./Navbar";
+import Navbar from "./components/Navbar";
 
 
 const container = document.getElementById('navbar');

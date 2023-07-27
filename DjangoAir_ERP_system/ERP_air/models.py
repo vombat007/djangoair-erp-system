@@ -134,6 +134,7 @@ class Ticket(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     flight = models.ForeignKey(Flight, on_delete=models.CASCADE)
     ticket_number = models.CharField(max_length=10, unique=True)
+    seat_number = models.IntegerField(null=True, blank=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=30, choices=GENDER)
