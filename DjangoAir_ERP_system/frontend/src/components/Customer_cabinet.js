@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import {createRoot} from "react-dom/client";
 
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -108,6 +107,4 @@ const CustomerCabinetView = () => {
     );
 };
 
-const container = document.getElementById('cabinet');
-const root = createRoot(container);
-root.render(<CustomerCabinetView/>);
+export default CustomerCabinetView;

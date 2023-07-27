@@ -5,4 +5,3 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import Navbar from "./Navbar";
 import FlightsSearch from "./components/Flight"
-import CustomerCabinetView from "./components/Customer_cabinet"
