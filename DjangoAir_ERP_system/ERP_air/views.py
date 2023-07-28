@@ -259,4 +259,29 @@ class BookingFlightAPIView(APIView):
 
 class CheckInAPIView(APIView):
     def post(self, request):
-        pass
+        ticket_number = request.data.get('ticket_number', None)
+
+        if not ticket_number:
+            return Response({'error': 'Ticket number is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            ticket = Ticket.objects.get(ticket_number=ticket_number)
+        except Ticket.DoesNotExist:
+            return Response({'error': 'Ticket not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        if ticket.seat_number is not None:
+            return Response({'error': 'Ticket has already been checked-in.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Generate seat number based on flight, airplane, and seat type
+        seat_number = self.generate_seat_number(ticket.flight, ticket.seat.seat_type)
+        ticket.seat_number = seat_number
+        ticket.save()
+
+        return Response({'seat_number': seat_number}, status=status.HTTP_200_OK)
+
+    def generate_seat_number(self, flight, seat_type):
+        tickets = Ticket.objects.filter(
+            flight=flight,
+            seat__seat_type=seat_type).exclude(seat_number=None)
+        max_seat_number = tickets.aggregate(models.Max('seat_number'))['seat_number__max'] or 0
+        return max_seat_number + 1
