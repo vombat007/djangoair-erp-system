@@ -22,7 +22,12 @@ def send_ticket_email(user, ticket):
     subject = 'Ticket Data'
     html_message_ticket = render_to_string(
         'Ticket.html',
-        {'user': user, 'ticket': ticket})
+        {
+            'user': user,
+            'ticket': ticket,
+            'departure_date': ticket.flight.departure_date,
+            'destination': ticket.flight.destination
+        })
 
     html_message_bill = render_to_string(
         'Bill.html',

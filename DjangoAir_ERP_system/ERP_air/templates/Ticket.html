@@ -12,7 +12,9 @@
 
 <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
 
-    <h2 style="background-color: #f0f0f0; padding: 10px; border-radius: 5px;">Ticket Number - {{ ticket.ticket_number }}</h2>
+    <h2 style="background-color: #f0f0f0; padding: 10px; border-radius: 5px;">Ticket Number - {{ ticket.ticket_number
+        }}</h2>
+    <p>Destination - {{ destination }}</p>
     <p>First Name - {{ ticket.first_name }}</p>
     <p>Last Name - {{ ticket.last_name }} </p>
     <p>Gender - {{ ticket.gender }}</p>
@@ -20,14 +22,14 @@
     <p>Seat Type - {{ ticket.seat.seat_type.seat_type }}</p>
 
     {% if ticket.options.all %}
-        <p>Options:</p>
-        <ul>
-            {% for option in ticket.options.all %}
-                <li>{{ option.name }}</li>
-            {% endfor %}
-        </ul>
+    <p>Options:</p>
+    <ul>
+        {% for option in ticket.options.all %}
+        <li>{{ option.name }}</li>
+        {% endfor %}
+    </ul>
     {% endif %}
-
+    <p>Departure Date - {{ departure_date }}</p>
 </div>
 
 <br>
