@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import Registrate from './Registrate';
 import Login from './Login';
-import CustomerCabinetView from "./Customer_cabinet"
+import CustomerCabinetView from "./CustomerCabinet"
 import FlightsSearch from "./Flight";
 
 
