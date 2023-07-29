@@ -25,9 +25,9 @@ const CustomerCabinetView = () => {
     const fetchCustomerData = async () => {
         try {
             const response = await axios.get('/api/customer_cabinet/');
-            setCustomerData(response.data);
-            setFirstName(response.data.user.first_name || '');
-            setLastName(response.data.user.last_name || '');
+            setCustomerData(response.data.customer_cabinet);
+            setFirstName(response.data.customer_cabinet.first_name || '');
+            setLastName(response.data.customer_cabinet.last_name || '');
         } catch (error) {
             console.error('Error fetching customer data:', error);
         }
@@ -95,8 +95,6 @@ const CustomerCabinetView = () => {
             <h1>{customerData.first_name} Cabinet</h1>
             <div>
                 <h2>Discount: {customerData.discount} %</h2>
-                <h2>Future Flight: {customerData.future_flight}</h2>
-                <h2>Previous Flight: {customerData.previous_flight}</h2>
             </div>
 
             <div className="dropdown">
