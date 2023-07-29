@@ -17,6 +17,8 @@ const CustomerCabinetView = () => {
     const [lastName, setLastName] = useState('');
     const [ticketNumber, setTicketNumber] = useState('');
     const [seatNumber, setSeatNumber] = useState('');
+    const [futureFlights, setFutureFlights] = useState([]);
+    const [pastFlights, setPastFlights] = useState([]);
 
     useEffect(() => {
         fetchCustomerData();
@@ -28,6 +30,8 @@ const CustomerCabinetView = () => {
             setCustomerData(response.data.customer_cabinet);
             setFirstName(response.data.customer_cabinet.first_name || '');
             setLastName(response.data.customer_cabinet.last_name || '');
+            setFutureFlights(response.data.future_flight || []);
+            setPastFlights(response.data.past_flight || []);
         } catch (error) {
             console.error('Error fetching customer data:', error);
         }
@@ -168,6 +172,32 @@ const CustomerCabinetView = () => {
                         {seatNumber && <p>Checked-In! Seat Number: {seatNumber}</p>}
                     </li>
                 </ul>
+                <div>
+                    <h3>Future Flights:</h3>
+                    <ul>
+                        {futureFlights.map((flight) => (
+                            <li key={flight.id}>
+                                Ticket Number: {flight.ticket_number},
+                                Departure Date: {flight.departure_date},
+                                Seat Number: {flight.seat_number},
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                {/* Display Past Flights */}
+                <div>
+                    <h3>Past Flights:</h3>
+                    <ul>
+                        {pastFlights.map((flight) => (
+                            <li key={flight.id}>
+                                Ticket Number: {flight.ticket_number},
+                                Departure Date: {flight.departure_date},
+                                Seat Number: {flight.seat_number},
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
 
             <style>
