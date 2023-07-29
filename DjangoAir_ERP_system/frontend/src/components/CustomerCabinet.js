@@ -142,7 +142,6 @@ const CustomerCabinetView = () => {
 
             <hr/>
 
-            {/* Online Check-In with Bootstrap dropdown */}
             <div className="dropdown">
                 <button
                     className="btn btn-success dropdown-toggle"

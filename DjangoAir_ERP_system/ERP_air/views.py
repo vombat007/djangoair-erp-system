@@ -58,7 +58,23 @@ class CustomerCabinetViewAPIView(APIView):
         user = request.user
         customer_cabinet = CustomerCabinet.objects.get(user=user)
         serializer = CustomerCabinetSerializer(customer_cabinet)
-        return Response(serializer.data)
+
+        # Filter tickets related to the user with a departure date in the future or now
+        future_tickets = Ticket.objects.filter(user=user, flight__departure_date__gte=datetime.now())
+
+        # Filter tickets related to the user with a departure date in the past
+        past_tickets = Ticket.objects.filter(user=user, flight__departure_date__lt=datetime.now())
+
+        # Update the TicketSerializer with the additional fields
+        future_tickets_serializer = TicketSerializer(future_tickets, many=True)
+        past_tickets_serializer = TicketSerializer(past_tickets, many=True)
+
+        data = {
+            'customer_cabinet': serializer.data,
+            'future_flight': future_tickets_serializer.data,
+            'past_flight': past_tickets_serializer.data,
+        }
+        return Response(data)
 
     def post(self, request):
         user = request.user

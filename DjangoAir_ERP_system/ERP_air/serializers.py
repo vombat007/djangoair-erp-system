@@ -27,7 +27,7 @@ class CustomerCabinetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomerCabinet
-        fields = ['user', 'discount', 'future_flight', 'previous_flight', 'first_name', 'last_name']
+        fields = ['user', 'discount', 'first_name', 'last_name']
 
     def update(self, instance, validated_data):
         user_data = validated_data.pop('user', {})
@@ -59,6 +59,9 @@ class OptionsSerializer(serializers.ModelSerializer):
 
 
 class TicketSerializer(serializers.ModelSerializer):
+    destination = serializers.CharField(source='flight.destination', read_only=True)
+    departure_date = serializers.DateTimeField(source='flight.departure_date', read_only=True)
+
     class Meta:
         model = Ticket
         fields = '__all__'
