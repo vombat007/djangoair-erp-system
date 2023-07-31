@@ -94,6 +94,7 @@ const CustomerCabinetView = () => {
         }
     };
 
+
     return (
         <div>
             <h1>{customerData.first_name} Cabinet</h1>
@@ -172,39 +173,61 @@ const CustomerCabinetView = () => {
                         {seatNumber && <p>Checked-In! Seat Number: {seatNumber}</p>}
                     </li>
                 </ul>
-                <div>
-                    <h3>Future Flights:</h3>
-                    <ul>
-                        {futureFlights.map((flight) => (
-                            <li key={flight.id}>
-                                Ticket Number: {flight.ticket_number},
-                                Departure Date: {flight.departure_date},
-                                Seat Number: {flight.seat_number},
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+            </div>
 
-                {/* Display Past Flights */}
-                <div>
-                    <h3>Past Flights:</h3>
-                    <ul>
-                        {pastFlights.map((flight) => (
-                            <li key={flight.id}>
-                                Ticket Number: {flight.ticket_number},
-                                Departure Date: {flight.departure_date},
-                                Seat Number: {flight.seat_number},
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+            <div className="dropdown">
+                <button
+                    className="btn btn-info dropdown-toggle"
+                    type="button"
+                    id="futureFlightsDropdown"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    Future Flights
+                </button>
+                <ul className="dropdown-menu" aria-labelledby="futureFlightsDropdown">
+                    <li>
+                        <ul>
+                            {futureFlights.map((flight) => (
+                                <li key={flight.id}>
+                                    Ticket Number: {flight.ticket_number}, Departure Date: {flight.departure_date}, Seat
+                                    Number: {flight.seat_number}
+                                </li>
+                            ))}
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div className="dropdown">
+                <button
+                    className="btn btn-warning dropdown-toggle"
+                    type="button"
+                    id="pastFlightsDropdown"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    Past Flights
+                </button>
+                <ul className="dropdown-menu" aria-labelledby="pastFlightsDropdown">
+                    <li>
+                        <ul>
+                            {pastFlights.map((flight) => (
+                                <li key={flight.id}>
+                                    Ticket Number: {flight.ticket_number}, Departure Date: {flight.departure_date}, Seat
+                                    Number: {flight.seat_number}
+                                </li>
+                            ))}
+                        </ul>
+                    </li>
+                </ul>
             </div>
 
             <style>
                 {`
-        .form-control {
-          width: 600px; /* Set the desired width for the input fields */
-        }
+          .form-control {
+            width: 700px; /* Set the desired width for the input fields */
+          }
         `}
             </style>
         </div>
