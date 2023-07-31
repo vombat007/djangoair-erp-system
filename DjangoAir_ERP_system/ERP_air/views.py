@@ -52,17 +52,14 @@ class CustomerLogoutAPIView(APIView):
 
 
 class CustomerCabinetViewAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated]  # Add permission class
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         user = request.user
         customer_cabinet = CustomerCabinet.objects.get(user=user)
         serializer = CustomerCabinetSerializer(customer_cabinet)
 
-        # Filter tickets related to the user with a departure date in the future or now
         future_tickets = Ticket.objects.filter(user=user, flight__departure_date__gte=datetime.now())
-
-        # Filter tickets related to the user with a departure date in the past
         past_tickets = Ticket.objects.filter(user=user, flight__departure_date__lt=datetime.now())
 
         # Update the TicketSerializer with the additional fields

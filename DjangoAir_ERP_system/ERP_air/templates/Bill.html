@@ -16,7 +16,7 @@
     <p>Last Name - {{ ticket.last_name }} </p>
 
         {% if ticket.options.all %}
-        <p>Options:</p>
+        <p>Options Price:</p>
         <ul>
             {% for option in ticket.options.all %}
                 <li>{{ option.name }} - {{ option.price }} $</li>
