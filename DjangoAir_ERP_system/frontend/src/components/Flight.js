@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 import DatePicker from 'react-datepicker';
-import {createRoot} from 'react-dom/client';
 import {Form, Button} from 'react-bootstrap';
 import FlightDetails from './FlightDetails';
 
@@ -110,6 +109,13 @@ const FlightsSearch = () => {
                     )}
                 </div>
             )}
+            <style>
+                {`
+          .form-control {
+            width: 200px; /* Set the desired width for the input fields */
+          }
+        `}
+            </style>
         </div>
     );
 };
