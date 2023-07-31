@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from .forms import CustomerCreationForm, CustomerLoginForm
 from .serializers import *
 from datetime import datetime
-from .utils import generate_random_code, send_ticket_email
+from .utils import *
 
 
 class CustomerRegistrationAPIView(APIView):
@@ -289,15 +289,8 @@ class CheckInAPIView(APIView):
             return Response({'error': 'Ticket has already been checked-in.'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Generate seat number based on flight, airplane, and seat type
-        seat_number = self.generate_seat_number(ticket.flight, ticket.seat.seat_type)
+        seat_number = generate_seat_number(ticket.flight, ticket.seat.seat_type)
         ticket.seat_number = seat_number
         ticket.save()
 
         return Response({'seat_number': seat_number}, status=status.HTTP_200_OK)
-
-    def generate_seat_number(self, flight, seat_type):
-        tickets = Ticket.objects.filter(
-            flight=flight,
-            seat__seat_type=seat_type).exclude(seat_number=None)
-        max_seat_number = tickets.aggregate(models.Max('seat_number'))['seat_number__max'] or 0
-        return max_seat_number + 1

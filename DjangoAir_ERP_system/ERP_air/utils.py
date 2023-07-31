@@ -3,6 +3,8 @@ import string
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.db import models
+from ERP_air.models import Ticket
 
 
 def generate_random_code():
@@ -45,3 +47,11 @@ def send_ticket_email(user, ticket):
               [user.email], html_message=html_message_bill)
 
     print('Email Send')
+
+
+def generate_seat_number(flight, seat_type):
+    tickets = Ticket.objects.filter(
+        flight=flight,
+        seat__seat_type=seat_type).exclude(seat_number=None)
+    max_seat_number = tickets.aggregate(models.Max('seat_number'))['seat_number__max'] or 0
+    return max_seat_number + 1
