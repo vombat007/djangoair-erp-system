@@ -6,7 +6,7 @@ function getCookie(name) {
   if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-function Login() {
+function Login({ onLoginStatusChange }) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [username, setUsername] = useState('');
@@ -17,13 +17,15 @@ function Login() {
     const token = getCookie('csrftoken');
     setCsrfToken(token);
 
+    // Check if user was logged in before page reload
     const storedLoggedIn = localStorage.getItem('loggedIn');
     if (storedLoggedIn === 'true') {
       setLoggedIn(true);
       const storedUsername = localStorage.getItem('username');
       setUsername(storedUsername);
+      onLoginStatusChange(true); // Notify Navbar about the login status change
     }
-  }, []);
+  }, [onLoginStatusChange]);
 
   const handleLoginClick = () => {
     setShowLoginForm(true);
@@ -43,6 +45,7 @@ function Login() {
           setLoggedIn(true);
           localStorage.setItem('loggedIn', 'true');
           localStorage.setItem('username', username);
+          onLoginStatusChange(true);
         } else {
           // Handle invalid username or password
         }
@@ -62,8 +65,9 @@ function Login() {
       .then((response) => {
         if (response.status === 200) {
           setLoggedIn(false);
-          localStorage.removeItem('loggedIn');
+          localStorage.removeItem('loggedIn'); // Remove login status from local storage
           localStorage.removeItem('username');
+          onLoginStatusChange(false); // Notify Navbar about the login status change
         } else {
           // Handle logout failure
         }
