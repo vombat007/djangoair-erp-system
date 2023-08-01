@@ -26,7 +26,7 @@ const CustomerCabinetView = () => {
 
     const fetchCustomerData = async () => {
         try {
-            const response = await axios.get('/api/customer_cabinet/');
+            const response = await axios.get('/api/user_cabinet/');
             setCustomerData(response.data.customer_cabinet);
             setFirstName(response.data.customer_cabinet.first_name || '');
             setLastName(response.data.customer_cabinet.last_name || '');
@@ -54,7 +54,7 @@ const CustomerCabinetView = () => {
 
         try {
             const response = await axios.post(
-                '/api/customer_cabinet/',
+                '/api/user_cabinet/',
                 {
                     first_name: firstName,
                     last_name: lastName,

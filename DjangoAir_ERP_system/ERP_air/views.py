@@ -9,7 +9,7 @@ from datetime import datetime
 from .utils import *
 
 
-class CustomerRegistrationAPIView(APIView):
+class UserRegistrationAPIView(APIView):
     def post(self, request):
         form = CustomerCreationForm(request.data)
         if form.is_valid():
@@ -27,7 +27,7 @@ class CustomerRegistrationAPIView(APIView):
         return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CustomerLoginAPIView(APIView):
+class UserLoginAPIView(APIView):
     def post(self, request):
         form = CustomerLoginForm(data=request.data)
         if form.is_valid():
@@ -43,13 +43,13 @@ class CustomerLoginAPIView(APIView):
             return Response({'message': 'Invalid form data'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CustomerLogoutAPIView(APIView):
+class UserLogoutAPIView(APIView):
     def post(self, request):
         logout(request)
         return Response({'message': 'Logout successful'}, status=status.HTTP_200_OK)
 
 
-class CustomerCabinetViewAPIView(APIView):
+class UserCabinetViewAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
