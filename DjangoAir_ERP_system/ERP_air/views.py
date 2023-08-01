@@ -289,3 +289,32 @@ class CheckInAPIView(APIView):
         ticket.save()
 
         return Response({'seat_number': seat_number}, status=status.HTTP_200_OK)
+
+
+class StuffCabinetAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        role = user.role
+        user_serializer = UserSerializer(user)
+
+        flights = Flight.objects.all()
+        flight_serializer = FlightSerializer(flights, many=True)
+
+        if role == User.GATE_MANAGER:
+            data = {
+                'user': user_serializer.data,
+                'flights': flight_serializer.data,
+            }
+            return Response(data)
+
+        elif role == User.CHECKIN_MANAGER:
+            # Implement check-in passenger logic here
+            pass
+
+        elif role == User.SUPERVISOR:
+            # Implement supervisor logic here
+            pass
+
+        return Response({"message": "You don't have permission to access this."})

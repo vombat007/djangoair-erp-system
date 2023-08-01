@@ -11,4 +11,5 @@ urlpatterns = [
     path('api/flight/details/', FlightDetailsAPIView.as_view(), name='options'),
     path('api/flight/booking/', BookingFlightAPIView.as_view(), name='flight-booking'),
     path('api/flight/check_in/', CheckInAPIView.as_view(), name='check_in'),
+    path('api/stuff_cabinet/', StuffCabinetAPIView.as_view(), name='stuff_cabinet'),
 ]
