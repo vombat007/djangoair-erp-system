@@ -54,6 +54,7 @@ class UserCabinetViewAPIView(APIView):
 
     def get(self, request):
         user = request.user
+        user_serializer = UserSerializer(user)
         customer_cabinet = CustomerCabinet.objects.get(user=user)
         serializer = CustomerCabinetSerializer(customer_cabinet)
 
@@ -65,6 +66,7 @@ class UserCabinetViewAPIView(APIView):
         past_tickets_serializer = TicketSerializer(past_tickets, many=True)
 
         data = {
+            'user': user_serializer.data,
             'customer_cabinet': serializer.data,
             'future_flight': future_tickets_serializer.data,
             'past_flight': past_tickets_serializer.data,
@@ -304,6 +306,9 @@ class AirplanesListAPIView(APIView):
         airplane_serializer = AirplaneSerializer(airplane, many=True)
         return Response(airplane_serializer.data)
 
+
+class TicketSearchAPIView(APIView):
+    pass
 
 class StuffCabinetAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
