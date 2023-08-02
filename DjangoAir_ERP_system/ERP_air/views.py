@@ -291,6 +291,20 @@ class CheckInAPIView(APIView):
         return Response({'seat_number': seat_number}, status=status.HTTP_200_OK)
 
 
+class CustomersListAPIView(APIView):
+    def get(self, request):
+        customers = User.objects.filter(role=User.CUSTOMER)
+        customers_serializer = UserSerializer(customers, many=True)
+        return Response(customers_serializer.data)
+
+
+class AirplanesListAPIView(APIView):
+    def get(self, request):
+        airplane = Airplane.objects.all()
+        airplane_serializer = AirplaneSerializer(airplane, many=True)
+        return Response(airplane_serializer.data)
+
+
 class StuffCabinetAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -301,11 +315,17 @@ class StuffCabinetAPIView(APIView):
 
         flights = Flight.objects.all()
         flight_serializer = FlightSerializer(flights, many=True)
+        airplane = Airplane.objects.all()
+        airplane_serializer = AirplaneSerializer(airplane, many=True)
+        customers = User.objects.filter(role=User.CUSTOMER)
+        customers_serializer = UserSerializer(customers, many=True)
 
         if role == User.GATE_MANAGER:
             data = {
                 'user': user_serializer.data,
                 'flights': flight_serializer.data,
+                'airplane': airplane_serializer.data,
+                'customers': customers_serializer.data,
             }
             return Response(data)
 
