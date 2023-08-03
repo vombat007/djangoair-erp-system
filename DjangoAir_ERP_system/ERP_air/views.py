@@ -307,8 +307,67 @@ class AirplanesListAPIView(APIView):
         return Response(airplane_serializer.data)
 
 
+class TicketsAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        tickets = Ticket.objects.select_related('user', 'flight', 'seat', 'seat__seat_type').prefetch_related('options')
+
+        ticket_data = []
+        for ticket in tickets:
+            ticket_info = {
+                'ticket_number': ticket.ticket_number,
+                'user': {
+                    'email': ticket.user.email,
+                    'first_name': ticket.user.first_name,
+                    'last_name': ticket.user.last_name,
+                },
+                'flight': {
+                    'departure_date': ticket.flight.departure_date,
+                    'destination': ticket.flight.destination,
+                },
+                'seat': {
+                    'seat_type': ticket.seat.seat_type.seat_type,
+                    'seat_number': ticket.seat_number,
+                },
+                'options': [{
+                    'name': option.name,
+                    'price': option.price,
+                } for option in ticket.options.all()],
+            }
+            ticket_data.append(ticket_info)
+
+        return Response(ticket_data)
+
+
 class TicketSearchAPIView(APIView):
-    pass
+    def get(self, request, flight_id):
+        try:
+            flight = Flight.objects.get(id=flight_id)
+            tickets = Ticket.objects.filter(flight=flight)
+
+            ticket_data = []
+            for ticket in tickets:
+                ticket_data.append({
+                    'ticket_number': ticket.ticket_number,
+                    'seat_number': ticket.seat_number,
+                    'first_name': ticket.first_name,
+                    'last_name': ticket.last_name,
+                    'gender': ticket.gender,
+                    'passport_number': ticket.passport_number,
+                    'price': ticket.price,
+                })
+
+            response_data = {
+                'flight': {
+                    'departure_date': flight.departure_date,
+                    'destination': flight.destination,
+                },
+                'tickets': ticket_data,
+            }
+
+            return Response(response_data)
+        except Flight.DoesNotExist:
+            return Response({'error': 'Flight not found'}, status=404)
+
 
 class StuffCabinetAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]

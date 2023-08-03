@@ -27,6 +27,15 @@ function StuffCabinet() {
             .catch(error => console.error('Error fetching customers:', error));
     }, []);
 
+    const handleFlightClick = (flightId) => {
+        axios.get(`/api/ticket/${flightId}/`)
+            .then(response => {
+                // Handle the response and create a ticket, e.g. display a modal
+                console.log(response.data);
+            })
+            .catch(error => console.error('Error creating ticket:', error));
+    };
+
     return (
         <div className="container">
             <h1 className="my-4">Stuff Cabinet {user_cabinet.role}</h1>
@@ -37,6 +46,7 @@ function StuffCabinet() {
                     {flights.map(flight => (
                         <li key={flight.id} className="list-group-item">
                             Flight to {flight.destination} on {flight.departure_date}
+                            <button onClick={() => handleFlightClick(flight.id)}>Show All Tickets</button>
                         </li>
                     ))}
                 </ul>
