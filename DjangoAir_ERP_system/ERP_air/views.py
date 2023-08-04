@@ -307,37 +307,6 @@ class AirplanesListAPIView(APIView):
         return Response(airplane_serializer.data)
 
 
-class TicketsAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        tickets = Ticket.objects.select_related('user', 'flight', 'seat', 'seat__seat_type').prefetch_related('options')
-
-        ticket_data = []
-        for ticket in tickets:
-            ticket_info = {
-                'ticket_number': ticket.ticket_number,
-                'user': {
-                    'email': ticket.user.email,
-                    'first_name': ticket.user.first_name,
-                    'last_name': ticket.user.last_name,
-                },
-                'flight': {
-                    'departure_date': ticket.flight.departure_date,
-                    'destination': ticket.flight.destination,
-                },
-                'seat': {
-                    'seat_type': ticket.seat.seat_type.seat_type,
-                    'seat_number': ticket.seat_number,
-                },
-                'options': [{
-                    'name': option.name,
-                    'price': option.price,
-                } for option in ticket.options.all()],
-            }
-            ticket_data.append(ticket_info)
-
-        return Response(ticket_data)
-
-
 class TicketSearchAPIView(APIView):
     def get(self, request, flight_id):
         try:
@@ -346,15 +315,30 @@ class TicketSearchAPIView(APIView):
 
             ticket_data = []
             for ticket in tickets:
-                ticket_data.append({
+                ticket_info = {
                     'ticket_number': ticket.ticket_number,
-                    'seat_number': ticket.seat_number,
-                    'first_name': ticket.first_name,
-                    'last_name': ticket.last_name,
-                    'gender': ticket.gender,
-                    'passport_number': ticket.passport_number,
                     'price': ticket.price,
-                })
+                    'seat_number': ticket.seat_number,
+                    'gender': ticket.gender,
+                    'user': {
+                        'email': ticket.user.email,
+                        'first_name': ticket.user.first_name,
+                        'last_name': ticket.user.last_name,
+                    },
+                    'flight': {
+                        'departure_date': ticket.flight.departure_date,
+                        'destination': ticket.flight.destination,
+                    },
+                    'seat': {
+                        'seat_type': ticket.seat.seat_type.seat_type,
+                        'seat_number': ticket.seat_number,
+                    },
+                    'options': [{
+                        'name': option.name,
+                        'price': option.price,
+                    } for option in ticket.options.all()],
+                }
+                ticket_data.append(ticket_info)
 
             response_data = {
                 'flight': {
