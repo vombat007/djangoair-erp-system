@@ -3,14 +3,26 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Dropdown, DropdownButton, Modal, Button} from 'react-bootstrap';
 
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+const getCSRFToken = () => {
+    return getCookie('csrftoken');
+};
+
 function StuffCabinet() {
     const [flights, setFlights] = useState([]);
     const [airplanes, setAirplanes] = useState([]);
     const [customers, setCustomers] = useState([]);
     const [user_cabinet, setUserCabinet] = useState([]);
     const [selectedFlightTickets, setSelectedFlightTickets] = useState([]);
-    const [selectedTicket, setSelectedTicket] = useState(null); // State for selected ticket
+    const [selectedTicket, setSelectedTicket] = useState(null);
     const [showTicketModal, setShowTicketModal] = useState(false);
+    const [ticketNumber, setTicketNumber] = useState('');
+    const [seatNumber, setSeatNumber] = useState('');
 
 
     useEffect(() => {
@@ -51,6 +63,31 @@ function StuffCabinet() {
         setSelectedTicket(ticket); // Set the selected ticket
     };
 
+    const handleTicketNumberChange = (event) => {
+        setTicketNumber(event.target.value);
+    };
+
+    const handleCheckIn = async () => {
+        try {
+            const response = await axios.post(
+                '/api/flight/check_in/',
+                {
+                    ticket_number: ticketNumber,
+                },
+                {
+                    headers: {
+                        'X-CSRFToken': getCSRFToken(),
+                    },
+                }
+            );
+
+            setSeatNumber(response.data.seat_number);
+            alert(`Checked-in! Seat Number: ${response.data.seat_number}`);
+        } catch (error) {
+            console.error('Error during check-in:', error);
+        }
+    };
+
     return (
         <div className="container">
             <h1 className="my-4">Stuff Cabinet {user_cabinet.role}</h1>
@@ -73,7 +110,7 @@ function StuffCabinet() {
                                     >
                                         Ticket: {ticket.ticket_number},
                                         Seat Number: {ticket.seat_number},
-                                        Seat Type: {ticket.seat.seat_type},
+                                        Seat Type: {ticket.seat.seat_type}
                                     </Dropdown.Item>
                                 ))}
                             </DropdownButton>
@@ -126,6 +163,35 @@ function StuffCabinet() {
                     )}
                 </Modal.Body>
                 <Modal.Footer>
+                    <div className="dropdown">
+                        <button
+                            className="btn btn-success dropdown-toggle"
+                            type="button"
+                            id="checkInDropdown"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            Online Check-In
+                        </button>
+                        <ul className="dropdown-menu" aria-labelledby="checkInDropdown">
+                            <li>
+                                <div className="form-group">
+                                    <label htmlFor="ticketNumber">Ticket Number:</label>
+                                    <input
+                                        type="text"
+                                        id="ticketNumber"
+                                        className="form-control"
+                                        value={ticketNumber}
+                                        onChange={handleTicketNumberChange}
+                                    />
+                                </div>
+                                <button onClick={handleCheckIn} className="btn btn-success">
+                                    Check-In
+                                </button>
+                                {seatNumber && <p>Checked-In! Seat Number: {seatNumber}</p>}
+                            </li>
+                        </ul>
+                    </div>
                     <Button variant="secondary" onClick={() => setSelectedTicket(null)}>
                         Close
                     </Button>
