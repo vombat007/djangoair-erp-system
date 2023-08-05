@@ -1,14 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Dropdown, DropdownButton} from 'react-bootstrap';
+import {Dropdown, DropdownButton, Modal, Button} from 'react-bootstrap';
 
 function StuffCabinet() {
     const [flights, setFlights] = useState([]);
     const [airplanes, setAirplanes] = useState([]);
     const [customers, setCustomers] = useState([]);
     const [user_cabinet, setUserCabinet] = useState([]);
-    const [selectedFlightTickets, setSelectedFlightTickets] = useState([]); // State for ticket information
+    const [selectedFlightTickets, setSelectedFlightTickets] = useState([]);
+    const [selectedTicket, setSelectedTicket] = useState(null); // State for selected ticket
+    const [showTicketModal, setShowTicketModal] = useState(false);
 
 
     useEffect(() => {
@@ -29,19 +31,30 @@ function StuffCabinet() {
             .catch(error => console.error('Error fetching data:', error));
     }, []);
 
+
     const handleFlightClick = (flightId) => {
         axios.get(`/api/ticket/${flightId}/`)
             .then(response => {
-                setSelectedFlightTickets(response.data.tickets); // Update ticket information state
+                setSelectedFlightTickets(response.data.tickets);
+                setShowTicketModal(true); // Open the modal when tickets are fetched
             })
             .catch(error => console.error('Error fetching tickets:', error));
     };
 
 
+    const handleCloseTicketModal = () => {
+        setShowTicketModal(false);
+        setSelectedTicket(null); // Reset selected ticket when closing modal
+    };
+
+
+    const handleTicketClick = (ticket) => {
+        setSelectedTicket(ticket); // Set the selected ticket
+    };
+
     return (
         <div className="container">
             <h1 className="my-4">Stuff Cabinet {user_cabinet.role}</h1>
-
             <section>
                 <h2>Flights</h2>
                 <ul className="list-group">
@@ -55,15 +68,13 @@ function StuffCabinet() {
                                 className="custom-dropdown"
                             >
                                 {selectedFlightTickets.map(ticket => (
-                                    <Dropdown.Item key={ticket.id}>
+                                    <Dropdown.Item
+                                        key={ticket.id}
+                                        onClick={() => handleTicketClick(ticket)} // Handle ticket click
+                                    >
                                         Ticket: {ticket.ticket_number},
-                                        First Name: {ticket.user.first_name},
-                                        Last Name: {ticket.user.last_name},
-                                        Email: {ticket.user.email},
-                                        Gender: {ticket.gender},
                                         Seat Number: {ticket.seat_number},
                                         Seat Type: {ticket.seat.seat_type},
-                                        Price: {ticket.price},
                                     </Dropdown.Item>
                                 ))}
                             </DropdownButton>
@@ -89,6 +100,30 @@ function StuffCabinet() {
                     ))}
                 </ul>
             </section>
+            <Modal show={selectedTicket !== null} onHide={() => setSelectedTicket(null)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Ticket Information</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {selectedTicket && (
+                        <div>
+                            <p>Ticket: {selectedTicket.ticket_number}</p>
+                            <p>First Name: {selectedTicket.user.first_name}</p>
+                            <p>Last Name: {selectedTicket.user.last_name}</p>
+                            <p>Email: {selectedTicket.user.email}</p>
+                            <p>Gender: {selectedTicket.gender}</p>
+                            <p>Seat Number: {selectedTicket.seat_number}</p>
+                            <p>Seat Type: {selectedTicket.seat.seat_type}</p>
+                            <p>Price: {selectedTicket.price}$</p>
+                        </div>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setSelectedTicket(null)}>
+                        Close
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 }
