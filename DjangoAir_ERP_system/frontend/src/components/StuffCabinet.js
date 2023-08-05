@@ -17,7 +17,6 @@ function StuffCabinet() {
         axios.get('api/user_cabinet/')
             .then(response => setUserCabinet(response.data.user))
             .catch(error => console.error('Error fetching user cabinet', error));
-        // Fetch Flights, Airplanes, and Customers
         axios.all([
             axios.get('/api/flights/'),
             axios.get('/api/airplanes/'),
@@ -114,6 +113,14 @@ function StuffCabinet() {
                             <p>Gender: {selectedTicket.gender}</p>
                             <p>Seat Number: {selectedTicket.seat_number}</p>
                             <p>Seat Type: {selectedTicket.seat.seat_type}</p>
+                            <p>Options:</p>
+                            <ul>
+                                {selectedTicket.options.map(option => (
+                                    <li key={option.name}>
+                                        {option.name}: {option.price}$
+                                    </li>
+                                ))}
+                            </ul>
                             <p>Price: {selectedTicket.price}$</p>
                         </div>
                     )}
