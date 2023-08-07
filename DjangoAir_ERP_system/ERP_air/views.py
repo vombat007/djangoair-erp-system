@@ -378,3 +378,10 @@ class SeatAvailabilityAPIView(APIView):
             return Response(response_data)
         except Flight.DoesNotExist:
             return Response({'error': 'Flight not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class OptionsManagementAPIView(APIView):
+    def get(self, request):
+        options = Options.objects.all()
+        options_serializer = OptionsSerializer(options, many=True)
+        return Response(options_serializer.data)
