@@ -10,9 +10,9 @@ urlpatterns = [
     path('api/flight/details/', FlightDetailsAPIView.as_view(), name='options'),
     path('api/flight/booking/', BookingFlightAPIView.as_view(), name='flight-booking'),
     path('api/flight/check_in/', CheckInAPIView.as_view(), name='check_in'),
-    path('api/stuff_cabinet/', StuffCabinetAPIView.as_view(), name='stuff_cabinet'),
     path('api/flights/', FlightsListAPIView.as_view(), name='flights'),
     path('api/customers/', CustomersListAPIView.as_view(), name='customers'),
     path('api/airplanes/', AirplanesListAPIView.as_view(), name='airplanes'),
     path('api/ticket/<flight_id>/', TicketSearchAPIView.as_view(), name='ticket_search'),
+    path('api/seat/<flight_id>/', SeatSearchAPIView.as_view(), name='seat_search'),
 ]

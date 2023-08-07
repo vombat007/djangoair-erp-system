@@ -350,39 +350,31 @@ class TicketSearchAPIView(APIView):
 
             return Response(response_data)
         except Flight.DoesNotExist:
-            return Response({'error': 'Flight not found'}, status=404)
+            return Response({'error': 'Flight not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
-class StuffCabinetAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+class SeatSearchAPIView(APIView):
+    def get(self, request, flight_id):
+        try:
+            flight = Flight.objects.get(id=flight_id)
+            seats = Seat.objects.filter(airplane=flight.airplane)
+            seat_types = SeatType.objects.filter(seat__airplane=flight.airplane).distinct()
 
-    def get(self, request):
-        user = request.user
-        role = user.role
-        user_serializer = UserSerializer(user)
+            seat_data = {}
+            for seat_type in seat_types:
+                booked_seats = seats.filter(seat_type=seat_type, is_booked=True).count()
+                free_seats = seats.filter(seat_type=seat_type, is_booked=False).count()
 
-        flights = Flight.objects.all()
-        flight_serializer = FlightSerializer(flights, many=True)
-        airplane = Airplane.objects.all()
-        airplane_serializer = AirplaneSerializer(airplane, many=True)
-        customers = User.objects.filter(role=User.CUSTOMER)
-        customers_serializer = UserSerializer(customers, many=True)
+                seat_info = {
+                    'number_booked_seat': booked_seats,
+                    'number_free_seat': free_seats,
+                }
+                seat_data[seat_type.seat_type] = seat_info
 
-        if role == User.GATE_MANAGER:
-            data = {
-                'user': user_serializer.data,
-                'flights': flight_serializer.data,
-                'airplane': airplane_serializer.data,
-                'customers': customers_serializer.data,
+            response_data = {
+                'seats': seat_data,
             }
-            return Response(data)
 
-        elif role == User.CHECKIN_MANAGER:
-            # Implement check-in passenger logic here
-            pass
-
-        elif role == User.SUPERVISOR:
-            # Implement supervisor logic here
-            pass
-
-        return Response({"message": "You don't have permission to access this."})
+            return Response(response_data)
+        except Flight.DoesNotExist:
+            return Response({'error': 'Flight not found'}, status=status.HTTP_404_NOT_FOUND)
