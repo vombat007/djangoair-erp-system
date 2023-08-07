@@ -353,7 +353,7 @@ class TicketSearchAPIView(APIView):
             return Response({'error': 'Flight not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
-class SeatSearchAPIView(APIView):
+class SeatAvailabilityAPIView(APIView):
     def get(self, request, flight_id):
         try:
             flight = Flight.objects.get(id=flight_id)

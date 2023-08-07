@@ -14,5 +14,5 @@ urlpatterns = [
     path('api/customers/', CustomersListAPIView.as_view(), name='customers'),
     path('api/airplanes/', AirplanesListAPIView.as_view(), name='airplanes'),
     path('api/ticket/<flight_id>/', TicketSearchAPIView.as_view(), name='ticket_search'),
-    path('api/seat/<flight_id>/', SeatSearchAPIView.as_view(), name='seat_search'),
+    path('api/seat/<flight_id>/', SeatAvailabilityAPIView.as_view(), name='seat_search'),
 ]

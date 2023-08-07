@@ -23,6 +23,7 @@ function StuffCabinet() {
     const [showTicketModal, setShowTicketModal] = useState(false);
     const [ticketNumber, setTicketNumber] = useState('');
     const [seatNumber, setSeatNumber] = useState('');
+    const [selectedFlightSeats, setSelectedFlightSeats] = useState({});
 
 
     useEffect(() => {
@@ -47,9 +48,15 @@ function StuffCabinet() {
         axios.get(`/api/ticket/${flightId}/`)
             .then(response => {
                 setSelectedFlightTickets(response.data.tickets);
-                setShowTicketModal(true); // Open the modal when tickets are fetched
+                setShowTicketModal(true);
             })
             .catch(error => console.error('Error fetching tickets:', error));
+
+        axios.get(`/api/seat/${flightId}/`)
+            .then(response => {
+                setSelectedFlightSeats(response.data.seats);
+            })
+            .catch(error => console.error('Error fetching seat information:', error));
     };
 
 
@@ -114,6 +121,21 @@ function StuffCabinet() {
                                     </Dropdown.Item>
                                 ))}
                             </DropdownButton>
+
+                            <DropdownButton
+                                variant="secondary"
+                                title="Show Seat Information"
+                                onClick={() => handleFlightClick(flight.id)}
+                                className="custom-dropdown"
+                            >
+                                {Object.entries(selectedFlightSeats).map(([seatType, seatInfo]) => (
+                                    <Dropdown.Item key={seatType}>
+                                        Seat class: {seatType} - Booked: {seatInfo.number_booked_seat},
+                                        Free: {seatInfo.number_free_seat}
+                                    </Dropdown.Item>
+                                ))}
+                            </DropdownButton>
+
                         </li>
                     ))}
                 </ul>
