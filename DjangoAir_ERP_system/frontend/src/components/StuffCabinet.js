@@ -104,38 +104,39 @@ function StuffCabinet() {
                     {flights.map(flight => (
                         <li key={flight.id} className="list-group-item">
                             Flight to {flight.destination} on {flight.departure_date}
-                            <DropdownButton
-                                variant="secondary"
-                                title="Show All Tickets"
-                                onClick={() => handleFlightClick(flight.id)}
-                                className="custom-dropdown"
-                            >
-                                {selectedFlightTickets.map(ticket => (
-                                    <Dropdown.Item
-                                        key={ticket.id}
-                                        onClick={() => handleTicketClick(ticket)} // Handle ticket click
-                                    >
-                                        Ticket: {ticket.ticket_number},
-                                        Seat Number: {ticket.seat_number},
-                                        Seat Type: {ticket.seat.seat_type}
-                                    </Dropdown.Item>
-                                ))}
-                            </DropdownButton>
+                            <div className="custom-dropdown-container">
+                                <DropdownButton
+                                    variant="secondary"
+                                    title="Show All Tickets"
+                                    onClick={() => handleFlightClick(flight.id)}
+                                    className="custom-dropdown"
+                                >
+                                    {selectedFlightTickets.map(ticket => (
+                                        <Dropdown.Item
+                                            key={ticket.id}
+                                            onClick={() => handleTicketClick(ticket)} // Handle ticket click
+                                        >
+                                            Ticket: {ticket.ticket_number},
+                                            Seat Number: {ticket.seat_number},
+                                            Seat Type: {ticket.seat.seat_type}
+                                        </Dropdown.Item>
+                                    ))}
+                                </DropdownButton>
 
-                            <DropdownButton
-                                variant="secondary"
-                                title="Show Seat Information"
-                                onClick={() => handleFlightClick(flight.id)}
-                                className="custom-dropdown"
-                            >
-                                {Object.entries(selectedFlightSeats).map(([seatType, seatInfo]) => (
-                                    <Dropdown.Item key={seatType}>
-                                        Seat class: {seatType} - Booked: {seatInfo.number_booked_seat},
-                                        Free: {seatInfo.number_free_seat}
-                                    </Dropdown.Item>
-                                ))}
-                            </DropdownButton>
-
+                                <DropdownButton
+                                    variant="secondary"
+                                    title="Show Seat Information"
+                                    onClick={() => handleFlightClick(flight.id)}
+                                    className="custom-dropdown"
+                                >
+                                    {Object.entries(selectedFlightSeats).map(([seatType, seatInfo]) => (
+                                        <Dropdown.Item key={seatType}>
+                                            Seat class: {seatType} - Booked: {seatInfo.number_booked_seat},
+                                            Free: {seatInfo.number_free_seat}
+                                        </Dropdown.Item>
+                                    ))}
+                                </DropdownButton>
+                            </div>
                         </li>
                     ))}
                 </ul>
@@ -219,6 +220,15 @@ function StuffCabinet() {
                     </Button>
                 </Modal.Footer>
             </Modal>
+            <style>
+                {'.custom-dropdown-container {\n' +
+                    '    display: flex; /* Use flexbox to display dropdowns horizontally */\n' +
+                    '}\n' +
+                    '\n' +
+                    '.custom-dropdown {\n' +
+                    '    margin-right: 10px; /* Add spacing between dropdowns if desired */\n' +
+                    '}'}
+            </style>
         </div>
     );
 }
