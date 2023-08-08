@@ -380,8 +380,17 @@ class SeatAvailabilityAPIView(APIView):
             return Response({'error': 'Flight not found'}, status=status.HTTP_404_NOT_FOUND)
 
 
-class OptionsManagementAPIView(APIView):
+class OptionsAPIView(APIView):
     def get(self, request):
         options = Options.objects.all()
         options_serializer = OptionsSerializer(options, many=True)
         return Response(options_serializer.data)
+
+    def post(self, request):
+        options_serializer = OptionsSerializer(data=request.data)
+
+        if options_serializer.is_valid():
+            options_serializer.save()
+            return Response(options_serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(options_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

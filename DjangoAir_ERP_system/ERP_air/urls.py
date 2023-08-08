@@ -15,5 +15,5 @@ urlpatterns = [
     path('api/airplanes/', AirplanesListAPIView.as_view(), name='airplanes'),
     path('api/ticket/<flight_id>/', TicketSearchAPIView.as_view(), name='ticket_search'),
     path('api/seat/<flight_id>/', SeatAvailabilityAPIView.as_view(), name='seat_search'),
-    path('api/options/', OptionsManagementAPIView.as_view(), name='options')
+    path('api/options/', OptionsAPIView.as_view(), name='options')
 ]
