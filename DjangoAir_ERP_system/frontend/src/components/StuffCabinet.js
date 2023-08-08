@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Dropdown, DropdownButton, Modal, Button} from 'react-bootstrap';
+import OptionsManagement from "./OptionsManagement";
 
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -145,7 +146,8 @@ function StuffCabinet() {
                 <h2>Airplanes</h2>
                 <ul className="list-group">
                     {airplanes.map(airplane => (
-                        <li key={airplane.id} className="list-group-item">{airplane.id} {airplane.name}</li>
+                        <li key={airplane.id} className="list-group-item">{airplane.id} Airplane
+                            Type: {airplane.name}</li>
                     ))}
                 </ul>
             </section>
@@ -155,7 +157,8 @@ function StuffCabinet() {
                 <ul className="list-group">
                     {customers.map(customer => (
                         <li key={customer.id}
-                            className="list-group-item">{customer.email} {customer.first_name} {customer.last_name}</li>
+                            className="list-group-item">Email: {customer.email}, First Name: {customer.first_name}, Last
+                            Name: {customer.last_name}</li>
                     ))}
                 </ul>
             </section>
@@ -229,6 +232,10 @@ function StuffCabinet() {
                     '    margin-right: 10px; /* Add spacing between dropdowns if desired */\n' +
                     '}'}
             </style>
+
+            <section>
+                <OptionsManagement/>
+            </section>
         </div>
     );
 }
