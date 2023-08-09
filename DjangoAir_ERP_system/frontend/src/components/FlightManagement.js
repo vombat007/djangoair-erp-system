@@ -125,6 +125,28 @@ function FlightManagement() {
                                         </Dropdown.Item>
                                     ))}
                                 </DropdownButton>
+
+                                <DropdownButton
+                                    title="Online Check-In"
+                                    variant="success"
+                                    className="custom-dropdown"
+                                >
+                                    <div className="form-group">
+                                        <label htmlFor="ticketNumber">Ticket Number:</label>
+                                        <input
+                                            type="text"
+                                            id="ticketNumber"
+                                            className="form-control"
+                                            value={ticketNumber}
+                                            onChange={handleTicketNumberChange}
+                                        />
+                                    </div>
+                                    <button onClick={handleCheckIn} className="btn btn-success">
+                                        Check-In
+                                    </button>
+                                    {seatNumber && <p>Checked-In! Seat Number: {seatNumber}</p>}
+                                </DropdownButton>
+
                             </div>
                         </li>
                     ))}
@@ -157,35 +179,6 @@ function FlightManagement() {
                     )}
                 </Modal.Body>
                 <Modal.Footer>
-                    <div className="dropdown">
-                        <button
-                            className="btn btn-success dropdown-toggle"
-                            type="button"
-                            id="checkInDropdown"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                        >
-                            Online Check-In
-                        </button>
-                        <ul className="dropdown-menu" aria-labelledby="checkInDropdown">
-                            <li>
-                                <div className="form-group">
-                                    <label htmlFor="ticketNumber">Ticket Number:</label>
-                                    <input
-                                        type="text"
-                                        id="ticketNumber"
-                                        className="form-control"
-                                        value={ticketNumber}
-                                        onChange={handleTicketNumberChange}
-                                    />
-                                </div>
-                                <button onClick={handleCheckIn} className="btn btn-success">
-                                    Check-In
-                                </button>
-                                {seatNumber && <p>Checked-In! Seat Number: {seatNumber}</p>}
-                            </li>
-                        </ul>
-                    </div>
                     <Button variant="secondary" onClick={() => setSelectedTicket(null)}>
                         Close
                     </Button>
