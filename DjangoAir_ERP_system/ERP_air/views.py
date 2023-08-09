@@ -273,6 +273,7 @@ class BookingFlightAPIView(APIView):
 class CheckInAPIView(APIView):
     def post(self, request):
         ticket_number = request.data.get('ticket_number', None)
+        seat_number_option = request.data.get('seat_number', None)
 
         if not ticket_number:
             return Response({'error': 'Ticket number is required.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -285,12 +286,16 @@ class CheckInAPIView(APIView):
         if ticket.seat_number is not None:
             return Response({'error': 'Ticket has already been checked-in.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Generate seat number based on flight, airplane, and seat type
-        seat_number = generate_seat_number(ticket.flight, ticket.seat.seat_type)
-        ticket.seat_number = seat_number
-        ticket.save()
+        if seat_number_option is None:
+            # Generate seat number based on flight, airplane, and seat type
+            seat_number = generate_seat_number(ticket.flight, ticket.seat.seat_type)
+            ticket.seat_number = seat_number
+            ticket.save()
+        else:
+            ticket.seat_number = seat_number_option
+            ticket.save()
 
-        return Response({'seat_number': seat_number}, status=status.HTTP_200_OK)
+        return Response({'seat_number': ticket.seat_number}, status=status.HTTP_200_OK)
 
 
 class CustomersListAPIView(APIView):
