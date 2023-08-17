@@ -273,7 +273,7 @@ class BookingFlightAPIView(APIView):
 class CheckInAPIView(APIView):
     def post(self, request):
         ticket_number = request.data.get('ticket_number', None)
-        seat_number_option = request.data.get('seat_number', None)
+        seat_number = request.data.get('seat_number', None)  # Get the provided seat number
 
         if not ticket_number:
             return Response({'error': 'Ticket number is required.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -283,19 +283,22 @@ class CheckInAPIView(APIView):
         except Ticket.DoesNotExist:
             return Response({'error': 'Ticket not found.'}, status=status.HTTP_404_NOT_FOUND)
 
-        if ticket.seat_number is not None:
+        if ticket.seat.seat_number is not None:
             return Response({'error': 'Ticket has already been checked-in.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if seat_number_option is None:
-            # Generate seat number based on flight, airplane, and seat type
+        if seat_number is None:  # If seat_number is not provided, generate one
             seat_number = generate_seat_number(ticket.flight, ticket.seat.seat_type)
-            ticket.seat_number = seat_number
+            ticket.seat.seat_number = seat_number
+            ticket.seat.is_booked = True
+            ticket.seat.save()
             ticket.save()
         else:
-            ticket.seat_number = seat_number_option
+            ticket.seat.seat_number = seat_number
+            ticket.seat.is_booked = True
+            ticket.seat.save()
             ticket.save()
 
-        return Response({'seat_number': ticket.seat_number}, status=status.HTTP_200_OK)
+        return Response({'seat_number': seat_number}, status=status.HTTP_200_OK)
 
 
 class CustomersListAPIView(APIView):
@@ -323,7 +326,6 @@ class TicketSearchAPIView(APIView):
                 ticket_info = {
                     'ticket_number': ticket.ticket_number,
                     'price': ticket.price,
-                    'seat_number': ticket.seat_number,
                     'gender': ticket.gender,
                     'user': {
                         'email': ticket.user.email,
@@ -336,7 +338,7 @@ class TicketSearchAPIView(APIView):
                     },
                     'seat': {
                         'seat_type': ticket.seat.seat_type.seat_type,
-                        'seat_number': ticket.seat_number,
+                        'seat_number': ticket.seat.seat_number,
                     },
                     'options': [{
                         'name': option.name,
@@ -370,9 +372,15 @@ class SeatAvailabilityAPIView(APIView):
                 booked_seats = seats.filter(seat_type=seat_type, is_booked=True).count()
                 free_seats = seats.filter(seat_type=seat_type, is_booked=False).count()
 
+                # Calculate the numbers for check-in
+                total_seats = booked_seats + free_seats
+                numbers_for_checkin = [str(i) for i in range(1, total_seats + 1) if
+                                       not seats.filter(seat_type=seat_type, is_booked=True, seat_number=i).exists()]
+
                 seat_info = {
                     'number_booked_seat': booked_seats,
                     'number_free_seat': free_seats,
+                    'number_for_checkin': ', '.join(numbers_for_checkin),
                 }
                 seat_data[seat_type.seat_type] = seat_info
 

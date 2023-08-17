@@ -29,7 +29,7 @@ function StuffCabinet() {
 
     return (
         <div className="container">
-            <h1 className="my-4">Stuff Cabinet {user_cabinet.role}</h1>
+            <h1 className="my-4">Stuff Cabinet: {user_cabinet.role}</h1>
             <section>
                 <FlightManagement/>
             </section>

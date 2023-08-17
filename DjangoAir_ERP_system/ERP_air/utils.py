@@ -52,6 +52,6 @@ def send_ticket_email(user, ticket):
 def generate_seat_number(flight, seat_type):
     tickets = Ticket.objects.filter(
         flight=flight,
-        seat__seat_type=seat_type).exclude(seat_number=None)
-    max_seat_number = tickets.aggregate(models.Max('seat_number'))['seat_number__max'] or 0
+        seat__seat_type=seat_type).exclude(seat__seat_number=None)
+    max_seat_number = tickets.aggregate(models.Max('seat__seat_number'))['seat__seat_number__max'] or 0
     return max_seat_number + 1

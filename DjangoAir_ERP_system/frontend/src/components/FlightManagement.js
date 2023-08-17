@@ -106,7 +106,7 @@ function FlightManagement() {
                                             onClick={() => handleTicketClick(ticket)} // Handle ticket click
                                         >
                                             Ticket: {ticket.ticket_number},
-                                            Seat Number: {ticket.seat_number},
+                                            Seat Number: {ticket.seat.seat_number},
                                             Seat Type: {ticket.seat.seat_type}
                                         </Dropdown.Item>
                                     ))}
@@ -164,7 +164,7 @@ function FlightManagement() {
                             <p>Last Name: {selectedTicket.user.last_name}</p>
                             <p>Email: {selectedTicket.user.email}</p>
                             <p>Gender: {selectedTicket.gender}</p>
-                            <p>Seat Number: {selectedTicket.seat_number}</p>
+                            <p>Seat Number: {selectedTicket.seat.seat_number}</p>
                             <p>Seat Type: {selectedTicket.seat.seat_type}</p>
                             <p>Options:</p>
                             <ul>
