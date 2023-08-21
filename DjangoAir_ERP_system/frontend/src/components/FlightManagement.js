@@ -22,6 +22,8 @@ function FlightManagement() {
     const [seatNumber, setSeatNumber] = useState('');
     const [selectedFlightSeats, setSelectedFlightSeats] = useState({});
     const [availableSeatNumbers, setAvailableSeatNumbers] = useState([]);
+    const [seatType, setSeatType] = useState(''); // Selected seat type
+    const [selectedSeatNumbers, setSelectedSeatNumbers] = useState([]);
 
 
     useEffect(() => {
@@ -95,6 +97,19 @@ function FlightManagement() {
         }
     };
 
+    const handleSeatTypeChange = (event) => {
+        const selectedType = event.target.value;
+        setSeatType(selectedType);
+
+        // Update available seat numbers based on selected seat type
+        if (selectedFlightSeats[selectedType]) {
+            const availableNumbers = selectedFlightSeats[selectedType].number_for_checkin.split(',').map(num => num.trim());
+            setSelectedSeatNumbers(availableNumbers);
+        } else {
+            setSelectedSeatNumbers([]);
+        }
+    };
+
     return (
         <div className="container">
             <section>
@@ -153,6 +168,21 @@ function FlightManagement() {
                                             />
                                         </div>
                                         <div className="form-group">
+                                            <label htmlFor="seatType">Select Seat Type:</label>
+                                            <select
+                                                id="seatType"
+                                                className="form-control"
+                                                value={seatType}
+                                                onChange={handleSeatTypeChange}
+                                            >
+                                                <option value="">Select Seat Type</option>
+                                                {Object.keys(selectedFlightSeats).map(type => (
+                                                    <option key={type} value={type}>{type}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        <div className="form-group">
                                             <label htmlFor="seatNumber">Select Seat Number:</label>
                                             <select
                                                 id="seatNumber"
@@ -161,7 +191,7 @@ function FlightManagement() {
                                                 onChange={(event) => setSeatNumber(event.target.value)}
                                             >
                                                 <option value="">Select Seat</option>
-                                                {availableSeatNumbers.map(num => (
+                                                {selectedSeatNumbers.map(num => (
                                                     <option key={num} value={num}>{num}</option>
                                                 ))}
                                             </select>
