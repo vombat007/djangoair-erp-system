@@ -286,7 +286,7 @@ class CheckInAPIView(APIView):
         if ticket.seat.seat_number is not None:
             return Response({'error': 'Ticket has already been checked-in.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        if seat_number is None:  # If seat_number is not provided, generate one
+        if seat_number is None or seat_number == '':  # If seat_number is not provided, generate one
             seat_number = generate_seat_number(ticket.flight, ticket.seat.seat_type)
             ticket.seat.seat_number = seat_number
             ticket.seat.is_booked = True

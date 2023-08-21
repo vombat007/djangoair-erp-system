@@ -21,6 +21,7 @@ function FlightManagement() {
     const [ticketNumber, setTicketNumber] = useState('');
     const [seatNumber, setSeatNumber] = useState('');
     const [selectedFlightSeats, setSelectedFlightSeats] = useState({});
+    const [availableSeatNumbers, setAvailableSeatNumbers] = useState([]);
 
 
     useEffect(() => {
@@ -45,6 +46,10 @@ function FlightManagement() {
         axios.get(`/api/seat/${flightId}/`)
             .then(response => {
                 setSelectedFlightSeats(response.data.seats);
+
+                // Extract available seat numbers for check-in from the response
+                const availableNumbers = response.data.seats.Economy.number_for_checkin.split(',').map(num => num.trim());
+                setAvailableSeatNumbers(availableNumbers);
             })
             .catch(error => console.error('Error fetching seat information:', error));
     };
@@ -70,6 +75,7 @@ function FlightManagement() {
                 '/api/flight/check_in/',
                 {
                     ticket_number: ticketNumber,
+                    seat_number: seatNumber,
                 },
                 {
                     headers: {
@@ -126,26 +132,42 @@ function FlightManagement() {
                                     ))}
                                 </DropdownButton>
 
-                                <DropdownButton
-                                    title="Online Check-In"
-                                    variant="success"
-                                    className="custom-dropdown"
-                                >
-                                    <div className="form-group">
-                                        <label htmlFor="ticketNumber">Ticket Number:</label>
-                                        <input
-                                            type="text"
-                                            id="ticketNumber"
-                                            className="form-control"
-                                            value={ticketNumber}
-                                            onChange={handleTicketNumberChange}
-                                        />
-                                    </div>
-                                    <button onClick={handleCheckIn} className="btn btn-success">
-                                        Check-In
-                                    </button>
-                                    {seatNumber && <p>Checked-In! Seat Number: {seatNumber}</p>}
-                                </DropdownButton>
+                                {availableSeatNumbers.length > 0 && (
+                                    <DropdownButton
+                                        title="Online Check-In"
+                                        variant="success"
+                                        className="custom-dropdown"
+                                    >
+                                        <div className="form-group">
+                                            <label htmlFor="ticketNumber">Ticket Number:</label>
+                                            <input
+                                                type="text"
+                                                id="ticketNumber"
+                                                className="form-control"
+                                                value={ticketNumber}
+                                                onChange={handleTicketNumberChange}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="seatNumber">Select Seat Number:</label>
+                                            <select
+                                                id="seatNumber"
+                                                className="form-control"
+                                                value={seatNumber}
+                                                onChange={(event) => setSeatNumber(event.target.value)}
+                                            >
+                                                <option value="">Select Seat</option>
+                                                {availableSeatNumbers.map(num => (
+                                                    <option key={num} value={num}>{num}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <button onClick={handleCheckIn} className="btn btn-success">
+                                            Check-In
+                                        </button>
+                                        {seatNumber && <p>Checked-In! Seat Number: {seatNumber}</p>}
+                                    </DropdownButton>
+                                )}
 
                             </div>
                         </li>
