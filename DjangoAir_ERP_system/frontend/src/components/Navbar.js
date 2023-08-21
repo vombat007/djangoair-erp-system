@@ -1,13 +1,21 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Registrate from './Registrate';
 import Login from './Login';
 import CustomerCabinetView from "./CustomerCabinet";
 import FlightsSearch from "./Flight";
 import StuffCabinet from "./StuffCabinet";
+import axios from "axios";
 
 const Navbar = () => {
     const [activeComponent, setActiveComponent] = useState(null);
     const [loggedIn, setLoggedIn] = useState(false);
+    const [user_cabinet, setUserCabinet] = useState([]);
+
+    useEffect(() => {
+        axios.get('api/user_cabinet/')
+            .then(response => setUserCabinet(response.data.user))
+            .catch(error => console.error('Error fetching user cabinet', error));
+    }, []);
 
     const handleCabinetClick = () => {
         setActiveComponent('Cabinet');
@@ -33,6 +41,10 @@ const Navbar = () => {
             case 'FlightSearch':
                 return <FlightsSearch/>;
             case 'StuffCabinet':
+                // Conditionally render StuffCabinet based on user's role
+                if (user_cabinet.role === 'customer') {
+                    return null; // Hide the component for customers
+                }
                 return <StuffCabinet/>;
 
             default:
@@ -61,11 +73,13 @@ const Navbar = () => {
                                 </button>
                             </li>
                         )}
-                        <li className="nav-item">
-                            <button className="nav-link" onClick={handleStuffCabinetClick}>
-                                Stuff Cabinet
-                            </button>
-                        </li>
+                        {loggedIn && user_cabinet.role !== 'customer' && (
+                            <li className="nav-item">
+                                <button className="nav-link" onClick={handleStuffCabinetClick}>
+                                    Stuff Cabinet
+                                </button>
+                            </li>
+                        )}
                         <li className="nav-item">
                             <button className="nav-link" onClick={handleFlightSearchClick}>
                                 Flight Search
