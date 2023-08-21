@@ -48,7 +48,11 @@ function FlightManagement() {
                 setSelectedFlightSeats(response.data.seats);
 
                 // Extract available seat numbers for check-in from the response
-                const availableNumbers = response.data.seats.Economy.number_for_checkin.split(',').map(num => num.trim());
+                const selectedFlightSeats = response.data.seats;
+                const seatTypes = Object.keys(selectedFlightSeats);
+                const availableNumbers = seatTypes.reduce((acc, seatType) => {
+                    return acc.concat(selectedFlightSeats[seatType].number_for_checkin.split(',').map(num => num.trim()));
+                }, []);
                 setAvailableSeatNumbers(availableNumbers);
             })
             .catch(error => console.error('Error fetching seat information:', error));
