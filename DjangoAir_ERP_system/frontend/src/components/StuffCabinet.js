@@ -31,7 +31,7 @@ function StuffCabinet() {
         <div className="container">
             <h1 className="my-4">Stuff Cabinet: {user_cabinet.role}</h1>
             <section>
-                <FlightManagement/>
+                <FlightManagement userRole={user_cabinet.role} />
             </section>
             <section>
                 <h2>Airplanes</h2>

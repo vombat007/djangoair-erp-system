@@ -13,7 +13,7 @@ const getCSRFToken = () => {
     return getCookie('csrftoken');
 };
 
-function FlightManagement() {
+function FlightManagement({ userRole }) {
     const [flights, setFlights] = useState([]);
     const [selectedFlightTickets, setSelectedFlightTickets] = useState([]);
     const [selectedTicket, setSelectedTicket] = useState(null);
@@ -151,7 +151,7 @@ function FlightManagement() {
                                     ))}
                                 </DropdownButton>
 
-                                {availableSeatNumbers.length > 0 && (
+                                {availableSeatNumbers.length > 0 && userRole !== 'gate_manager' && (
                                     <DropdownButton
                                         title="Online Check-In"
                                         variant="success"
