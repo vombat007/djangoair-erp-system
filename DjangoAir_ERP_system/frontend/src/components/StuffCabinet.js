@@ -54,9 +54,11 @@ function StuffCabinet() {
                 </ul>
             </section>
 
-            <section>
-                <OptionsManagement/>
-            </section>
+            {user_cabinet.role !== 'gate_manager' && (
+                <section>
+                    <OptionsManagement/>
+                </section>
+            )}
         </div>
     );
 }
