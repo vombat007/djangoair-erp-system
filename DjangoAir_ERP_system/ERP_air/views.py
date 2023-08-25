@@ -302,6 +302,8 @@ class CheckInAPIView(APIView):
 
 
 class CustomersListAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request):
         customers = User.objects.filter(role=User.CUSTOMER)
         customers_serializer = UserSerializer(customers, many=True)
@@ -309,10 +311,19 @@ class CustomersListAPIView(APIView):
 
 
 class AirplanesListAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request):
         airplane = Airplane.objects.all()
         airplane_serializer = AirplaneSerializer(airplane, many=True)
         return Response(airplane_serializer.data)
+
+    def post(self, request):
+        airplane_serializer = AirplaneSerializer(data=request.data)
+        if airplane_serializer.is_valid():
+            airplane_serializer.save()
+            return Response(airplane_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(airplane_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TicketSearchAPIView(APIView):
@@ -361,6 +372,8 @@ class TicketSearchAPIView(APIView):
 
 
 class SeatAvailabilityAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request, flight_id):
         try:
             flight = Flight.objects.get(id=flight_id)
@@ -394,6 +407,8 @@ class SeatAvailabilityAPIView(APIView):
 
 
 class OptionsAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request):
         options = Options.objects.all()
         options_serializer = OptionsSerializer(options, many=True)
