@@ -15,7 +15,6 @@ class UserRegistrationAPIView(APIView):
         if form.is_valid():
             user = form.save()
 
-            # Create a customer cabinet for the user
             customer_cabinet = CustomerCabinet.objects.create(
                 user=user,
                 discount=0,
@@ -308,6 +307,27 @@ class CustomersListAPIView(APIView):
         customers = User.objects.filter(role=User.CUSTOMER)
         customers_serializer = UserSerializer(customers, many=True)
         return Response(customers_serializer.data)
+
+
+class StuffListAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        gate_manager = User.objects.filter(role=User.GATE_MANAGER)
+        check_in_manager = User.objects.filter(role=User.CHECKIN_MANAGER)
+        supervisor = User.objects.filter(role=User.SUPERVISOR)
+
+        gate_manager_serializer = UserSerializer(gate_manager, many=True)
+        check_in_manager_serializer = UserSerializer(check_in_manager, many=True)
+        supervisor_serializer = UserSerializer(supervisor, many=True)
+
+        stuff_data = {
+            "gate_manager": gate_manager_serializer.data,
+            "check_in_manager": check_in_manager_serializer.data,
+            "supervisor": supervisor_serializer.data,
+        }
+
+        return Response(stuff_data, status=status.HTTP_200_OK)
 
 
 class AirplanesListAPIView(APIView):
