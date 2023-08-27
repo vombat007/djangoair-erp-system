@@ -330,6 +330,11 @@ class StuffListAPIView(APIView):
         return Response(stuff_data, status=status.HTTP_200_OK)
 
 
+class StuffManagementAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    pass
+
+
 class AirplanesListAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 

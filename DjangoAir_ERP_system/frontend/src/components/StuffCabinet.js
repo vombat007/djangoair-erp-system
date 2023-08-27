@@ -3,6 +3,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import OptionsManagement from "./OptionsManagement";
 import FlightManagement from "./FlightManagement";
+import StuffManagement from "./StuffManagement";
 
 function StuffCabinet() {
     const [airplanes, setAirplanes] = useState([]);
@@ -59,6 +60,10 @@ function StuffCabinet() {
                     <OptionsManagement/>
                 </section>
             )}
+            <section>
+                <StuffManagement/>
+            </section>
+
         </div>
     );
 }
