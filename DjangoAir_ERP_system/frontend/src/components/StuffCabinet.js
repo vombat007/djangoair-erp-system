@@ -1,14 +1,15 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import OptionsManagement from "./OptionsManagement";
 import FlightManagement from "./FlightManagement";
 import StuffManagement from "./StuffManagement";
+import AirplaneForm from "./AirplaneForm";
 
 function StuffCabinet() {
     const [airplanes, setAirplanes] = useState([]);
     const [customers, setCustomers] = useState([]);
     const [user_cabinet, setUserCabinet] = useState([]);
+    const [showAirplaneForm, setShowAirplaneForm] = useState(false);
 
 
     useEffect(() => {
@@ -28,11 +29,15 @@ function StuffCabinet() {
     }, []);
 
 
+    const toggleAirplaneForm = () => {
+        setShowAirplaneForm(!showAirplaneForm);
+    };
+
     return (
         <div className="container">
             <h1 className="my-4">Stuff Cabinet: {user_cabinet.role}</h1>
             <section>
-                <FlightManagement userRole={user_cabinet.role} />
+                <FlightManagement userRole={user_cabinet.role}/>
             </section>
             <section>
                 <h2>Airplanes</h2>
@@ -42,6 +47,11 @@ function StuffCabinet() {
                             Type: {airplane.name}</li>
                     ))}
                 </ul>
+            </section>
+
+            {showAirplaneForm && <AirplaneForm/>}
+            <section>
+                <button onClick={toggleAirplaneForm}>Create Airplane</button>
             </section>
 
             <section>
