@@ -9,7 +9,6 @@ function StuffCabinet() {
     const [airplanes, setAirplanes] = useState([]);
     const [customers, setCustomers] = useState([]);
     const [user_cabinet, setUserCabinet] = useState([]);
-    const [showAirplaneForm, setShowAirplaneForm] = useState(false);
 
     const updateAirplanesList = (newAirplane) => {
         setAirplanes(prevAirplanes => [...prevAirplanes, newAirplane]);
@@ -32,11 +31,6 @@ function StuffCabinet() {
             .catch(error => console.error('Error fetching data:', error));
     }, []);
 
-
-    const toggleAirplaneForm = () => {
-        setShowAirplaneForm(!showAirplaneForm);
-    };
-
     return (
         <div className="container">
             <h1 className="my-4">Stuff Cabinet: {user_cabinet.role}</h1>
@@ -53,9 +47,8 @@ function StuffCabinet() {
                 </ul>
             </section>
 
-            {showAirplaneForm && <AirplaneForm updateAirplanesList={updateAirplanesList} />}
             <section>
-                <button onClick={toggleAirplaneForm}>Create Airplane</button>
+                 <AirplaneForm updateAirplanesList={updateAirplanesList} />
             </section>
 
             <section>

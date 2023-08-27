@@ -45,21 +45,35 @@ function AirplaneForm({updateAirplanesList}) {
 
     return (
         <div className="container">
-            <h2>Create Airplane</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label>Name:</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                    />
+            <div className="dropdown">
+                <button
+                    className="btn btn-primary dropdown-toggle"
+                    type="button"
+                    id="createAirplaneDropdown"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    Create Airplane
+                </button>
+                <div className="dropdown-menu" aria-labelledby="createAirplaneDropdown">
+                    <h2>Create Airplane</h2>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label>Name:</label>
+                            <input
+                                type="text"
+                                className="form-control"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleInputChange}
+                            />
+                        </div>
+                        <button type="submit" className="btn btn-primary">
+                            Create Airplane
+                        </button>
+                    </form>
                 </div>
-                <button type="submit" className="btn btn-primary">Create Airplane</button>
-
-            </form>
+            </div>
         </div>
     );
 }
