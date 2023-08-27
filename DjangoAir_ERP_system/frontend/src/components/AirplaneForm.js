@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 
 function getCookie(name) {
@@ -47,16 +47,18 @@ function AirplaneForm({updateAirplanesList}) {
         <div className="container">
             <h2>Create Airplane</h2>
             <form onSubmit={handleSubmit}>
-                <label>
-                    Name:
+                <div className="form-group">
+                    <label>Name:</label>
                     <input
                         type="text"
+                        className="form-control"
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
                     />
-                </label>
-                <button type="submit">Create Airplane</button>
+                </div>
+                <button type="submit" className="btn btn-primary">Create Airplane</button>
+
             </form>
         </div>
     );
