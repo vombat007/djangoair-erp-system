@@ -11,7 +11,7 @@ const getCSRFToken = () => {
     return getCookie('csrftoken');
 };
 
-function AirplaneForm() {
+function AirplaneForm({updateAirplanesList}) {
     const [formData, setFormData] = useState({
         name: '',
     });
@@ -21,16 +21,19 @@ function AirplaneForm() {
         e.preventDefault();
         axios.post('/api/airplanes/', formData, {
             headers: {
-                'X-CSRFToken': getCSRFToken(), // Include the CSRF token in the headers
+                'X-CSRFToken': getCSRFToken(),
             },
         })
             .then(response => {
                 console.log('Airplane created successfully:', response.data);
+                // Call the updateAirplanesList function to update the list
+                updateAirplanesList(response.data);
             })
             .catch(error => {
                 console.error('Error creating airplane:', error);
             });
     };
+
 
     const handleInputChange = (e) => {
         const {name, value} = e.target;

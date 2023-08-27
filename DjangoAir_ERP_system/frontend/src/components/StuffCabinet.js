@@ -11,6 +11,10 @@ function StuffCabinet() {
     const [user_cabinet, setUserCabinet] = useState([]);
     const [showAirplaneForm, setShowAirplaneForm] = useState(false);
 
+    const updateAirplanesList = (newAirplane) => {
+        setAirplanes(prevAirplanes => [...prevAirplanes, newAirplane]);
+    };
+
 
     useEffect(() => {
         axios.get('api/user_cabinet/')
@@ -49,7 +53,7 @@ function StuffCabinet() {
                 </ul>
             </section>
 
-            {showAirplaneForm && <AirplaneForm/>}
+            {showAirplaneForm && <AirplaneForm updateAirplanesList={updateAirplanesList} />}
             <section>
                 <button onClick={toggleAirplaneForm}>Create Airplane</button>
             </section>
