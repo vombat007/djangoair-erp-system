@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Registrate from './Registrate';
 import Login from './Login';
 import CustomerCabinetView from "./CustomerCabinet";
-import FlightsSearch from "./Flight";
+import FlightsSearch from "./FlightsSearch";
 import StuffCabinet from "./StuffCabinet";
 import axios from "axios";
 

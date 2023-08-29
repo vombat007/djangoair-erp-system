@@ -4,6 +4,7 @@ import OptionsManagement from "./OptionsManagement";
 import FlightManagement from "./FlightManagement";
 import StuffManagement from "./StuffManagement";
 import AirplaneForm from "./AirplaneForm";
+import FlightForm from "./FlightForm";
 
 function StuffCabinet() {
     const [airplanes, setAirplanes] = useState([]);
@@ -37,6 +38,11 @@ function StuffCabinet() {
             <section>
                 <FlightManagement userRole={user_cabinet.role}/>
             </section>
+
+            <section>
+                <FlightForm/>
+            </section>
+
             <section>
                 <h2>Airplanes</h2>
                 <ul className="list-group">
@@ -48,7 +54,7 @@ function StuffCabinet() {
             </section>
 
             <section>
-                 <AirplaneForm updateAirplanesList={updateAirplanesList} />
+                <AirplaneForm updateAirplanesList={updateAirplanesList}/>
             </section>
 
             <section>
