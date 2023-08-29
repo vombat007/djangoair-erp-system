@@ -12,7 +12,7 @@ const getCSRFToken = () => {
     return getCookie('csrftoken');
 };
 
-function FlightForm() {
+function FlightForm({ updateFlightsList }) {
     const [formData, setFormData] = useState({
         airplane: '',
         departure_date: '',
@@ -49,6 +49,7 @@ function FlightForm() {
         })
             .then(response => {
                 console.log('Flight created successfully:', response.data);
+                updateFlightsList(prevFlights => [...prevFlights, response.data]);
             })
             .catch(error => {
                 console.error('Error creating flight:', error);

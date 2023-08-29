@@ -10,9 +10,14 @@ function StuffCabinet() {
     const [airplanes, setAirplanes] = useState([]);
     const [customers, setCustomers] = useState([]);
     const [user_cabinet, setUserCabinet] = useState([]);
+    const [flights, setFlights] = useState([]);
 
     const updateAirplanesList = (newAirplane) => {
         setAirplanes(prevAirplanes => [...prevAirplanes, newAirplane]);
+    };
+
+    const updateFlightsList = (newFlight) => {
+        setFlights(prevFlights => [...prevFlights, newFlight]);
     };
 
 
@@ -36,11 +41,11 @@ function StuffCabinet() {
         <div className="container">
             <h1 className="my-4">Stuff Cabinet: {user_cabinet.role}</h1>
             <section>
-                <FlightManagement userRole={user_cabinet.role}/>
+                <FlightManagement userRole={user_cabinet.role} flights={flights}/>
             </section>
 
             <section>
-                <FlightForm/>
+                <FlightForm updateFlightsList={updateFlightsList}/>
             </section>
 
             <section>

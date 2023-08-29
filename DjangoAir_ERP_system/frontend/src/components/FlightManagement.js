@@ -13,7 +13,7 @@ const getCSRFToken = () => {
     return getCookie('csrftoken');
 };
 
-function FlightManagement({ userRole }) {
+function FlightManagement({userRole}) {
     const [flights, setFlights] = useState([]);
     const [selectedFlightTickets, setSelectedFlightTickets] = useState([]);
     const [selectedTicket, setSelectedTicket] = useState(null);
@@ -34,7 +34,8 @@ function FlightManagement({ userRole }) {
                 setFlights(flightsResponse.data);
             }))
             .catch(error => console.error('Error fetching data:', error));
-    }, []);
+        setFlights(flights);
+    }, [flights]);
 
 
     const handleFlightClick = (flightId) => {
