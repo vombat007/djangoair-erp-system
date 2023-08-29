@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import {Dropdown, DropdownButton, Form} from 'react-bootstrap';
+import {Form} from 'react-bootstrap';
 
 function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -33,7 +33,16 @@ function FlightForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('/api/flights/', formData, {
+
+        const selectedAirplane = airplanes.find(airplane => airplane.name === formData.airplane);
+        const formattedDepartureDate = new Date(formData.departure_date).toISOString();
+        const payload = {
+            airplane: selectedAirplane.id, // Send the airplane ID
+            departure_date: formattedDepartureDate,
+            destination: formData.destination,
+        };
+
+        axios.post('/api/flights/', payload, {
             headers: {
                 'X-CSRFToken': getCSRFToken(),
             },
@@ -44,13 +53,6 @@ function FlightForm() {
             .catch(error => {
                 console.error('Error creating flight:', error);
             });
-    };
-
-    const handleDropdownSelect = (selectedAirplane) => {
-        setFormData(prevData => ({
-            ...prevData,
-            airplane: selectedAirplane,
-        }));
     };
 
     const handleInputChange = (e) => {
@@ -91,9 +93,9 @@ function FlightForm() {
                                     </option>
                                 ))}
                             </Form.Control>
-                            <label>Date:</label>
+                            <label>Departure Date/Time:</label>
                             <Form.Control
-                                type="date"
+                                type="datetime-local"
                                 name="departure_date"
                                 value={formData.departure_date}
                                 onChange={handleInputChange}
