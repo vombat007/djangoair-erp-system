@@ -13,6 +13,7 @@ const getCSRFToken = () => {
     return getCookie('csrftoken');
 };
 
+
 function FlightManagement({userRole}) {
     const [flights, setFlights] = useState([]);
     const [selectedFlightTickets, setSelectedFlightTickets] = useState([]);

@@ -16,10 +16,6 @@ function StuffCabinet() {
         setAirplanes(prevAirplanes => [...prevAirplanes, newAirplane]);
     };
 
-    const updateFlightsList = (newFlight) => {
-        setFlights(prevFlights => [...prevFlights, newFlight]);
-    };
-
 
     useEffect(() => {
         axios.get('api/user_cabinet/')
@@ -45,7 +41,7 @@ function StuffCabinet() {
             </section>
 
             <section>
-                <FlightForm updateFlightsList={updateFlightsList}/>
+                <FlightForm />
             </section>
 
             <section>
