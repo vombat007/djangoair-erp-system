@@ -35,7 +35,7 @@ function FlightManagement({userRole}) {
             }))
             .catch(error => console.error('Error fetching data:', error));
         setFlights(flights);
-    }, [flights]);
+    }, []);
 
 
     const handleFlightClick = (flightId) => {
