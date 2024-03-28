@@ -91,6 +91,28 @@ class UserCabinetViewAPIView(APIView):
         return Response(serializer.errors, status=400)
 
 
+class UserDiscountChangeAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        if request.user.role != User.SUPERVISOR:
+            return Response({'message': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+
+        user_id = request.data.get('user_id')
+        new_discount = request.data.get('discount')
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Update user's discount
+        user.customercabinet.discount = new_discount
+        user.customercabinet.save()
+
+        return Response({'message': 'Discount updated successfully'}, status=status.HTTP_200_OK)
+
+
 class FlightsListAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
